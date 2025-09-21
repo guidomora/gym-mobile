@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_title_rutina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rutina de Pecho y Hombro"
+        android:textSize="24sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:id="@+id/btn_edit_exercise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Editar Ejercicios" />
+
+    <Button
+        android:id="@+id/btn_delete_exercise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Eliminar Ejercicios" />
+
+    <Button
+        android:id="@+id/btn_save_routine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Guardar Rutina"
+        android:layout_marginTop="20dp" />
+
+</LinearLayout>
