@@ -3,46 +3,146 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="20dp">
+    android:gravity="top|center_horizontal"
+    android:paddingStart="32dp"
+    android:paddingTop="64dp"
+    android:paddingEnd="32dp"
+    android:paddingBottom="24dp"
+    android:background="@color/white">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:textSize="24sp"
-        android:layout_marginBottom="24dp" />
+        android:text="Gym-Pass"
+        android:textColor="@color/login_primary_text"
+        android:textSize="28sp"
+        android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/et_username"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Usuario" />
+        android:orientation="vertical"
+        android:layout_marginTop="48dp">
 
-    <EditText
-        android:id="@+id/et_password"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="12dp"
+                android:srcCompat="@drawable/user_svg" />
+
+            <EditText
+                android:id="@+id/et_username"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="Usuario"
+                android:textColor="@color/login_primary_text"
+                android:textColorHint="@color/login_hint_text"
+                android:textSize="16sp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/login_divider" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Contraseña"
-        android:inputType="textPassword" />
+        android:orientation="vertical"
+        android:layout_marginTop="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="12dp"
+                android:srcCompat="@drawable/password_svg" />
+
+
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="Contraseña"
+                android:inputType="textPassword"
+                android:textColor="@color/login_primary_text"
+                android:textColorHint="@color/login_hint_text"
+                android:textSize="16sp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/login_divider" />
+    </LinearLayout>
 
     <CheckBox
+        android:id="@+id/cb_remember_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Recordarme" />
+        android:layout_marginTop="24dp"
+        android:buttonTint="@color/login_checkbox_tint"
+        android:text="Recuérdame"
+        android:textColor="@color/login_primary_text"
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Iniciar Sesión"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="36dp"
+        android:background="@drawable/bg_login_primary_button"
+        android:backgroundTintMode="src_atop"
+        android:text="Iniciar sesion"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/btn_register_from_login"
-        style="@style/Widget.AppCompat.Button.Borderless"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="¿No tienes cuenta? Regístrate" />
+        android:orientation="horizontal"
+        android:layout_marginTop="32dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿No tienes cuenta? "
+            android:textColor="@color/login_hint_text"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/btn_register_from_login"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¡Regístrate!"
+            android:textAllCaps="false"
+            android:textColor="@color/login_button_background"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
 
 </LinearLayout>

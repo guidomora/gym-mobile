@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="login_primary_text">#333333</color>
+    <color name="login_hint_text">#9AA0A6</color>
+    <color name="login_divider">#E0E3E7</color>
+    <color name="login_button_background">#F26322</color>
+    <color name="login_checkbox_tint">#2F80ED</color>
 </resources>
