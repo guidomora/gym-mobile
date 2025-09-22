@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -33,7 +34,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:srcCompat="@drawable/user_svg" />
+                app:srcCompat="@drawable/user_svg" />
 
             <EditText
                 android:id="@+id/et_username"
@@ -71,7 +72,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="12dp"
-                android:srcCompat="@drawable/password_svg" />
+                app:srcCompat="@drawable/password_svg" />
 
 
             <EditText
@@ -97,9 +98,11 @@
 
     <CheckBox
         android:id="@+id/cb_remember_me"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="start"
         android:layout_marginTop="24dp"
+
         android:buttonTint="@color/login_checkbox_tint"
         android:text="Recuérdame"
         android:textColor="@color/login_primary_text"
@@ -111,7 +114,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:background="@drawable/bg_login_primary_button"
-        android:backgroundTintMode="src_atop"
+        app:backgroundTint="@null"
         android:text="Iniciar sesion"
         android:textAllCaps="false"
         android:textColor="@color/white"

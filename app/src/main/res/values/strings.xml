@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Gym_app</string>
+    <string name="registro">Registro</string>
+    <string name="registro_username_hint">Usuario *</string>
+    <string name="registro_phone_hint">Telefono</string>
+    <string name="registro_email_hint">Email *</string>
+    <string name="registro_birthdate_hint">Fecha  de nacimiento</string>
+    <string name="registro_password_hint">Contraseña</string>
+    <string name="registro_confirm_password_hint">Reingresar Contraseña</string>
+    <string name="registro_select_gym_label">Seleccionar gimnasio</string>
+    <string name="registro_cta">Registrarse</string>
 </resources>
