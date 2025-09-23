@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.LinearLayout; // Importa LinearLayout
 
 public class PerfilActivity extends AppCompatActivity {
     @Override
@@ -12,12 +12,14 @@ public class PerfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
 
-        Button homeButton = findViewById(R.id.btn_home_profile);
-        Button todayButton = findViewById(R.id.btn_today_profile);
+        // Referencia a los elementos de la barra de navegación
+        LinearLayout homeButton = findViewById(R.id.nav_home);
+        LinearLayout todayButton = findViewById(R.id.nav_today);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Navega a la pantalla de Inicio (alumno)
                 startActivity(new Intent(PerfilActivity.this, InicioActivity.class));
             }
         });
@@ -25,6 +27,7 @@ public class PerfilActivity extends AppCompatActivity {
         todayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Navega a la pantalla de Hoy (alumno)
                 startActivity(new Intent(PerfilActivity.this, HoyActivity.class));
             }
         });
