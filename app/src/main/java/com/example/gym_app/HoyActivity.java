@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class HoyActivity extends AppCompatActivity {
     @Override
@@ -12,13 +12,14 @@ public class HoyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hoy);
 
-        Button homeButton = findViewById(R.id.btn_home_hoy);
-        Button profileButton = findViewById(R.id.btn_profile_hoy);
+        LinearLayout homeButton = findViewById(R.id.nav_home);
+        LinearLayout profileButton = findViewById(R.id.nav_profile);
 
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HoyActivity.this, InicioActivity.class));
+                // Ahora navega a RutinasActivity, que es la nueva pantalla de inicio
+                startActivity(new Intent(HoyActivity.this, RutinasActivity.class));
             }
         });
 

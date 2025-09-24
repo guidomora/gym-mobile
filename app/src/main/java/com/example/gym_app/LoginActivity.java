@@ -20,7 +20,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Simula el login exitoso y navega a la pantalla de Inicio (alumno)
-                startActivity(new Intent(LoginActivity.this, InicioActivity.class));
+                startActivity(new Intent(LoginActivity.this, RutinasActivity.class));
+                finish(); // Esto cierra la actividad de login
             }
         });
 

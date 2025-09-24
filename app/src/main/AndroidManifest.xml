@@ -21,7 +21,6 @@
 
         <activity android:name=".RegistroActivity" />
 
-        <activity android:name=".InicioActivity" />
         <activity android:name=".HoyActivity" />
         <activity android:name=".PerfilActivity" />
 
