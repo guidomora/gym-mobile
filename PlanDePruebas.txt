@@ -1,0 +1,27 @@
+Módulo              Caso                                     Pasos clave                                                     Esperado
+-------------       ---------------------------------------- ---------------------------------------------------------------- -----------------------------------------------
+Auth                Registro Alumno OK                        Abrir app > Registro > Completar datos válidos > Enviar          Crea usuario, sesión iniciada
+Auth                Registro con datos inválidos              Campos vacíos/email mal/pass débil                               Mensajes de error por campo, no crea usuario
+Auth                Login OK                                  Ingresar credenciales válidas                                    Entra a dashboard del rol correspondiente
+Auth                Login inválido                            Email no registrado / pass errónea                               Error controlado, permanece en pantalla
+
+Alumno              Ver rutina del día con “Hoy”              Cambiar fecha del dispositivo (o mock del reloj) > Tap “Hoy”     Navega al detalle de la rutina correspondiente a la fecha
+Alumno              Ver lista de rutinas por semana           Abrir Inicio > Lista semanal                                     Muestra días con badges (cantidad de ejercicios)
+Alumno              Ver detalle de rutina                     Tap rutina “Pecho A”                                             Lista de ejercicios con series/reps/descanso/peso
+Alumno              Marcar ejercicio como completado          En detalle > Toggle “completado”                                 Persistencia del estado (reabre y se mantiene)
+Alumno              Sin rutina en un día                      Navegar a día sin rutina                                         Mensaje “No hay rutina asignada”
+
+Entrenador          Ver lista de alumnos                      Ingresar como entrenador > Lista                                 Cards con nombre/objetivo/última actualización
+Entrenador          Ver rutinas de un alumno                  Tap en alumno > Rutinas                                          Lista por día; contador de ejercicios; edición disponible
+Entrenador          Crear rutina (valores válidos)            “Rutina +” > Nombre > Día > Agregar ejercicios válidos           Rutina creada; aparece para el alumno
+Entrenador          Crear rutina (valores inválidos)          Series=0 o reps=-1                                               Validaciones por campo, no guarda
+Entrenador          Editar rutina                             Abrir rutina > Cambiar reps/series/descanso                      Cambios persisten; versión actualizada visible al alumno
+Entrenador          Borrar rutina                             Abrir rutina > Eliminar > Confirmar                              Rutina removida; desaparece en la vista del alumno
+
+Ejercicio           Agregar ejercicio con tipo de peso opc.   Al crear: dejar sin “tipo de peso”                               Guarda ejercicio sin ese campo
+Ejercicio           Validación de límites en descanso         Ingresar descanso negativo o muy alto                            Mensaje de error, bloquea guarda
+
+Perfil Alum         Editar teléfono, mail, nacimiento         Perfil > Editar > Guardar                                        Persisten cambios; validación formato email/teléfono
+Perfil entrenador   Editar datos entrenador                   Perfil entrenador > Editar                                       Persisten cambios; restricciones aplicadas
+Navegación          Back stack correcto                       Ir y volver entre pantallas                                      Back no sale abruptamente; mantiene estados razonables
+Persistencia        Cerrar y reabrir app                      Completar/editar > Cerrar app > Reabrir                          Datos locales intactos 
