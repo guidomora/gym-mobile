@@ -122,31 +122,78 @@
             android:layout_height="1dp"
             android:background="@color/login_divider" />
     </LinearLayout>
-
     <TextView
-        android:id="@+id/tv_trainer_title"
+        android:id="@+id/tv_membership_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Entrenador asociado"
+        android:text="Membresia"
         android:textColor="@color/login_primary_text"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/group_birthdate" />
 
     <TextView
-        android:id="@+id/tv_trainer_name"
+        android:id="@+id/tv_membership_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="John Doe"
+        android:text="Estado: activa"
         android:textColor="@color/login_primary_text"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_trainer_title"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
-        app:layout_constraintVertical_bias="0" />
+        app:layout_constraintTop_toBottomOf="@id/tv_membership_title" />
+
+
+    <LinearLayout
+        android:id="@+id/group_membership_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_membership_status">
+
+        <Button
+            android:id="@+id/btn_link_membership"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blue_button"
+            android:drawableLeft="@drawable/photo"
+            android:drawablePadding="12dp"
+
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="Vincular Membresia"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:backgroundTint="@null" />
+
+        <Button
+            android:id="@+id/btn_edit_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/blue_button"
+            android:drawableLeft="@drawable/edit_white"
+            android:drawablePadding="12dp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:text="Editar Datos"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:backgroundTint="@null" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_save"
