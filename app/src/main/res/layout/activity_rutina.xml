@@ -98,13 +98,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="4 series x 8–10 repeticiones"
-                    android:textColor="@color/login_hint_text" />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Descanso: 90 segundos"
-                    android:textColor="@color/login_hint_text" />
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <LinearLayout
@@ -143,13 +143,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="3 series x 12–15 repeticiones"
-                    android:textColor="@color/login_hint_text" />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Descanso: 60 segundos"
-                    android:textColor="@color/login_hint_text" />
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <LinearLayout
@@ -188,13 +188,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="3 series x 10–12 repeticiones"
-                    android:textColor="@color/login_hint_text" />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Descanso: 60–90 segundos"
-                    android:textColor="@color/login_hint_text" />
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <LinearLayout
@@ -233,13 +233,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="3 series x 12–15 repeticiones"
-                    android:textColor="@color/login_hint_text" />
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Descanso: 60 segundos"
-                    android:textColor="@color/login_hint_text" />
+                    android:textColor="@color/black" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -271,14 +271,14 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:contentDescription="Inicio"
-                app:srcCompat="@drawable/blue_home" />
+                app:srcCompat="@drawable/home" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Inicio"
-                android:textColor="@color/blue"
+                android:textColor="@color/black"
                 android:textSize="12sp" />
         </LinearLayout>
 

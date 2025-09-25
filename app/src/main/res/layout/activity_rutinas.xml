@@ -105,7 +105,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="60 min Lunes"
-                        android:textColor="@color/login_hint_text"
+                        android:textColor="@color/black"
                         android:textSize="14sp"
                         android:gravity="end"
                         android:textAlignment="viewEnd" />
@@ -152,7 +152,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="45 min Martes"
-                        android:textColor="@color/login_hint_text"
+                        android:textColor="@color/black"
                         android:textSize="14sp"
                         android:gravity="end"
                         android:textAlignment="viewEnd" />
@@ -200,7 +200,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="60 min Miércoles"
-                        android:textColor="@color/login_hint_text"
+                        android:textColor="@color/black"
                         android:textSize="14sp"
                         android:gravity="end"
                         android:textAlignment="viewEnd" />
@@ -247,7 +247,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="80 min Viernes"
-                        android:textColor="@color/login_hint_text"
+                        android:textColor="@color/black"
                         android:textSize="14sp"
                         android:gravity="end"
                         android:textAlignment="viewEnd" />
