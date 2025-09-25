@@ -223,7 +223,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:background="@drawable/ver_button"
+        android:background="#FF2E22"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
         android:text="Cerrar sesion"
