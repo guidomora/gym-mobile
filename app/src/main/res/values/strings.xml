@@ -10,6 +10,10 @@
     <string name="registro_select_gym_label">Seleccionar gimnasio</string>
     <string name="registro_cta">Registrarse</string>
     <string name="perfil">Perfil</string>
+    <string-array name="user_role_options">
+        <item>Usuario</item>
+        <item>Entrenador</item>
+    </string-array>
     <string-array name="routine_days">
         <item>Lunes</item>
         <item>Martes</item>

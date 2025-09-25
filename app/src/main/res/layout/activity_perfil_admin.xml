@@ -9,27 +9,38 @@
     android:paddingTop="24dp"
     android:paddingEnd="24dp"
     android:paddingBottom="24dp"
-    tools:context=".PerfilActivity">
+    tools:context=".PerfilEntrenadorActivity">
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="Volver"
+        android:padding="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back_arrow" />
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:fontFamily="sans-serif-medium"
         android:text="@string/perfil"
         android:textColor="@color/login_primary_text"
         android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@id/iv_back"
+        app:layout_constraintStart_toEndOf="@id/iv_back"
+        app:layout_constraintTop_toTopOf="@id/iv_back" />
 
     <TextView
-        android:id="@+id/tv_user_name"
+        android:id="@+id/tv_trainer_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Nombre usuario"
+        android:text="Nombre admin"
         android:textColor="@color/login_primary_text"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +55,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_user_name">
+        app:layout_constraintTop_toBottomOf="@id/tv_trainer_name">
 
         <TextView
             android:id="@+id/tv_phone"
@@ -75,7 +86,7 @@
             android:id="@+id/tv_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email: usuario@mail.com"
+            android:text="Email: entrenador@mail.com"
             android:textColor="@color/login_primary_text"
             android:textSize="16sp" />
 
@@ -90,11 +101,13 @@
         android:id="@+id/group_birthdate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/group_email">
+        app:layout_constraintTop_toBottomOf="@id/group_email"
+        app:layout_constraintVertical_bias="0.133">
 
         <TextView
             android:layout_width="wrap_content"
@@ -121,49 +134,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/login_divider" />
+
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_trainer_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="Entrenador asociado"
-        android:textColor="@color/login_primary_text"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/group_birthdate" />
-
-    <TextView
-        android:id="@+id/tv_trainer_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="John Doe"
-        android:textColor="@color/login_primary_text"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_trainer_title"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
-        app:layout_constraintVertical_bias="0" />
-
-    <Button
-        android:id="@+id/btn_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:background="@drawable/ver_button"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp"
-        android:text="Cerrar sesion"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:backgroundTint="@null"
-        tools:layout_editor_absoluteX="194dp"
-        tools:layout_editor_absoluteY="553dp"
-        tools:ignore="MissingConstraints" />
 
     <LinearLayout
         android:id="@+id/bottom_nav"
@@ -212,17 +184,12 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:contentDescription="Hoy"
-                app:srcCompat="@drawable/arm" />
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Hoy"
                 android:textColor="@color/login_hint_text"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -250,5 +217,22 @@
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@drawable/ver_button"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:text="Cerrar sesion"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:backgroundTint="@null"
+        tools:layout_editor_absoluteX="194dp"
+        tools:layout_editor_absoluteY="553dp"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
