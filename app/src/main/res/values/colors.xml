@@ -10,4 +10,5 @@
     <color name="login_divider">#E0E3E7</color>
     <color name="login_button_background">#F26322</color>
     <color name="login_checkbox_tint">#2F80ED</color>
+    <color name="login_secondary_text">#5F6368</color>
 </resources>
