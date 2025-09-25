@@ -85,6 +85,7 @@
                             tools:text="John Doe" />
 
                         <Button
+                            android:id="@+id/btn_view_john_doe"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/ver_button"
@@ -129,6 +130,7 @@
                             tools:text="Roberto Perez" />
 
                         <Button
+                            android:id="@+id/btn_view_roberto_perez"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/ver_button"
@@ -172,6 +174,7 @@
                             tools:text="Juana Doe" />
 
                         <Button
+                            android:id="@+id/btn_view_juana_doe"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/ver_button"
@@ -235,6 +238,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/nav_profile"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

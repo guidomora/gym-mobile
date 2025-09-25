@@ -199,7 +199,7 @@
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_marginTop="36dp"
         android:background="#FF2E22"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
@@ -208,9 +208,10 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:backgroundTint="@null"
-        tools:layout_editor_absoluteX="194dp"
-        tools:layout_editor_absoluteY="553dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/group_membership_actions" />
 
     <LinearLayout
         android:id="@+id/bottom_nav"
