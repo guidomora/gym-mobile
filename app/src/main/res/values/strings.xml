@@ -9,6 +9,16 @@
     <string name="registro_confirm_password_hint">Reingresar Contraseña</string>
     <string name="registro_select_gym_label">Seleccionar gimnasio</string>
     <string name="registro_cta">Registrarse</string>
+    <string name="error_username_required">Debes ingresar un usuario.</string>
+    <string name="error_password_required">Debes ingresar una contraseña.</string>
+    <string name="error_password_length">La contraseña debe tener al menos 6 caracteres.</string>
+    <string name="error_phone_invalid">Ingresa un número de teléfono válido.</string>
+    <string name="error_email_invalid">Ingresa un correo electrónico válido.</string>
+    <string name="error_birthdate_required">Selecciona tu fecha de nacimiento.</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden.</string>
+    <string name="error_gym_required">Selecciona un gimnasio antes de continuar.</string>
+    <string name="login_form_ready_message">Hola %1$s, los datos del login están listos para enviarse.</string>
+    <string name="register_form_ready_message">%1$s, tu registro está listo para enviarse.</string>
     <string name="perfil">Perfil</string>
     <string-array name="user_role_options">
         <item>Usuario</item>
