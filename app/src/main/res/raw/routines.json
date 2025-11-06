@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Pecho",
+    "duration": 60,
+    "day": "Lunes"
+  },
+  {
+    "name": "Hombros",
+    "duration": 45,
+    "day": "Martes"
+  },
+  {
+    "name": "Piernas",
+    "duration": 60,
+    "day": "Miércoles"
+  },
+  {
+    "name": "Tríceps y brazos",
+    "duration": 80,
+    "day": "Viernes"
+  }
+]

@@ -31,4 +31,5 @@
         <item>Jueves</item>
         <item>Viernes</item>
     </string-array>
+    <string name="routine_meta_format">%1$d min %2$s</string>
 </resources>

@@ -1,16 +1,31 @@
 package com.example.gym_app;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.gym_app.adapter.RoutineAdapter;
+import com.example.gym_app.data.RoutineLocalDataSource;
 
 public class RutinasActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rutinas);
+
+        RecyclerView routinesRecyclerView = findViewById(R.id.rv_routines);
+        routinesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        RoutineAdapter routineAdapter = new RoutineAdapter();
+        routinesRecyclerView.setAdapter(routineAdapter);
+
+        RoutineLocalDataSource dataSource = new RoutineLocalDataSource();
+        routineAdapter.submitList(dataSource.getRoutines(this));
 
         // Referencias a los elementos de la barra de navegación
         LinearLayout homeButton = findViewById(R.id.nav_home);
