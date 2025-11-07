@@ -8,7 +8,7 @@ import com.example.gym_app.model.Routine;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import org.json.JSONTokener;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,13 +46,31 @@ public class RoutineLocalDataSource {
 
     private List<Routine> parseRoutines(String json) throws JSONException {
         List<Routine> routines = new ArrayList<>();
-        JSONArray array = new JSONArray(json);
+        Object parsed = new JSONTokener(json).nextValue();
+        JSONArray array;
+        if (parsed instanceof JSONArray) {
+            array = (JSONArray) parsed;
+        } else if (parsed instanceof JSONObject) {
+            JSONObject root = (JSONObject) parsed;
+            array = root.optJSONArray("routines");
+            if (array == null) {
+                return routines;
+            }
+        } else {
+            return routines;
+        }
+
         for (int index = 0; index < array.length(); index++) {
-            JSONObject item = array.getJSONObject(index);
+            JSONObject item = array.optJSONObject(index);
+            if (item == null) {
+                continue;
+            }
             String name = item.optString("name", "");
             int duration = item.optInt("duration", 0);
             String day = item.optString("day", "");
-            routines.add(new Routine(name, duration, day));
+            if (!name.isEmpty()) {
+                routines.add(new Routine(name, duration, day));
+            }
         }
         return routines;
     }

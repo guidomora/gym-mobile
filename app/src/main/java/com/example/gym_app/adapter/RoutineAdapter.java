@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gym_app.R;
@@ -14,9 +16,28 @@ import com.example.gym_app.model.Routine;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineViewHolder> {
+import java.util.Objects;
 
-    private final List<Routine> routines = new ArrayList<>();
+public class RoutineAdapter extends ListAdapter<Routine, RoutineAdapter.RoutineViewHolder> {
+
+    private static final DiffUtil.ItemCallback<Routine> DIFF_CALLBACK = new DiffUtil.ItemCallback<Routine>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Routine oldItem, @NonNull Routine newItem) {
+            return Objects.equals(oldItem.getName(), newItem.getName())
+                    && Objects.equals(oldItem.getDayOfWeek(), newItem.getDayOfWeek());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Routine oldItem, @NonNull Routine newItem) {
+            return Objects.equals(oldItem.getName(), newItem.getName())
+                    && Objects.equals(oldItem.getDayOfWeek(), newItem.getDayOfWeek())
+                    && oldItem.getDurationInMinutes() == newItem.getDurationInMinutes();
+        }
+    };
+
+    public RoutineAdapter() {
+        super(DIFF_CALLBACK);
+    }
 
     @NonNull
     @Override
@@ -27,21 +48,8 @@ public class RoutineAdapter extends RecyclerView.Adapter<RoutineAdapter.RoutineV
 
     @Override
     public void onBindViewHolder(@NonNull RoutineViewHolder holder, int position) {
-        Routine routine = routines.get(position);
+        Routine routine = getItem(position);
         holder.bind(routine);
-    }
-
-    @Override
-    public int getItemCount() {
-        return routines.size();
-    }
-
-    public void submitList(List<Routine> newRoutines) {
-        routines.clear();
-        if (newRoutines != null) {
-            routines.addAll(newRoutines);
-        }
-        notifyDataSetChanged();
     }
 
     static class RoutineViewHolder extends RecyclerView.ViewHolder {
