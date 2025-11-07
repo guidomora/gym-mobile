@@ -1,6 +1,7 @@
 package com.example.gym_app;
 
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -117,5 +119,7 @@ public class LoginActivity extends AppCompatActivity {
         // En este punto se podrá hacer la llamada al backend con las credenciales.
         String confirmationMessage = getString(R.string.login_form_ready_message, credentials.getUsername());
         Toast.makeText(this, confirmationMessage, Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, RutinasActivity.class));
+        finish();
     }
 }
