@@ -31,7 +31,7 @@ import java.util.List;
 public class InicioEntrenadorActivity extends AppCompatActivity {
 
     private static final String TAG = "InicioEntrenadorActivity";
-    private static final String DASHBOARD_ASSET = "trainer_dashboard.json";
+    private static final int DASHBOARD_RESOURCE = R.raw.trainer_dashboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class InicioEntrenadorActivity extends AppCompatActivity {
         String trainerName = null;
         List<TrainerStudent> students = new ArrayList<>();
 
-        try (InputStream inputStream = getAssets().open(DASHBOARD_ASSET);
+        try (InputStream inputStream = getResources().openRawResource(DASHBOARD_RESOURCE);
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
             StringBuilder builder = new StringBuilder();
