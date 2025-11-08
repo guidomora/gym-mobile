@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gym_app.adapter.TrainerStudentsAdapter;
 import com.example.gym_app.data.TrainerDashboardLocalDataSource;
+import com.example.gym_app.model.TrainerStudent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,8 +49,7 @@ public class InicioEntrenadorActivity extends AppCompatActivity {
             trainerNameTextView.setText(dashboardData.getTrainerName());
         }
 
-        com.example.gym_app.TrainerStudentsAdapter adapter = new com.example.gym_app.TrainerStudentsAdapter(dashboardData.getStudents(), new TrainerStudentsAdapter.OnStudentClickListener() {
-            @Override
+        TrainerStudentsAdapter adapter = new TrainerStudentsAdapter(dashboardData.getStudents(), new TrainerStudentsAdapter.OnStudentClickListener() {            @Override
             public void onStudentSelected(TrainerStudent student) {
                 startActivity(new Intent(InicioEntrenadorActivity.this, RutinasEntrenadorActivity.class));
             }
@@ -60,7 +61,7 @@ public class InicioEntrenadorActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private TrainerDashboardData loadDashboardDataFromAssets() {
+    private TrainerDashboardLocalDataSource  loadDashboardDataFromAssets() {
         String trainerName = null;
         List<TrainerStudent> students = new ArrayList<>();
 
@@ -98,6 +99,6 @@ public class InicioEntrenadorActivity extends AppCompatActivity {
             Log.e(TAG, "Error al cargar los datos del entrenador", exception);
         }
 
-        return new TrainerDashboardData(trainerName, students);
+        return new TrainerDashboardLocalDataSource(trainerName, students);
     }
 }
