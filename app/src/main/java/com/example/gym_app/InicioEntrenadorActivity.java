@@ -1,58 +1,103 @@
 package com.example.gym_app;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.text.TextUtils;
+import android.util.Log;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.gym_app.data.TrainerDashboardLocalDataSource;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InicioEntrenadorActivity extends AppCompatActivity {
+
+    private static final String TAG = "InicioEntrenadorActivity";
+    private static final String DASHBOARD_ASSET = "trainer_dashboard.json";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio_entrenador);
 
-        // Referencias a los botones de "Ver" de los alumnos
-        Button viewJohnDoe = findViewById(R.id.btn_view_john_doe);
-        Button viewRobertoPerez = findViewById(R.id.btn_view_roberto_perez);
-        Button viewJuanaDoe = findViewById(R.id.btn_view_juana_doe);
-
-        // Referencia al botón de Perfil de la barra de navegación
+        TextView trainerNameTextView = findViewById(R.id.trainerName);
+        RecyclerView studentsRecyclerView = findViewById(R.id.recycler_students);
         LinearLayout profileButton = findViewById(R.id.nav_profile);
 
-        // Configurar el click para cada botón "Ver"
-        viewJohnDoe.setOnClickListener(new View.OnClickListener() {
+        studentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        TrainerDashboardLocalDataSource dashboardData = loadDashboardDataFromAssets();
+        if (!TextUtils.isEmpty(dashboardData.getTrainerName())) {
+            trainerNameTextView.setText(dashboardData.getTrainerName());
+        }
+
+        com.example.gym_app.TrainerStudentsAdapter adapter = new com.example.gym_app.TrainerStudentsAdapter(dashboardData.getStudents(), new TrainerStudentsAdapter.OnStudentClickListener() {
             @Override
-            public void onClick(View v) {
-                // Navega a la pantalla de Rutinas del entrenador
+            public void onStudentSelected(TrainerStudent student) {
                 startActivity(new Intent(InicioEntrenadorActivity.this, RutinasEntrenadorActivity.class));
             }
         });
+        studentsRecyclerView.setAdapter(adapter);
 
-        viewRobertoPerez.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navega a la pantalla de Rutinas del entrenador
-                startActivity(new Intent(InicioEntrenadorActivity.this, RutinasEntrenadorActivity.class));
-            }
-        });
+        profileButton.setOnClickListener(v ->
+                startActivity(new Intent(InicioEntrenadorActivity.this, PerfilEntrenadorActivity.class)));
+    }
 
-        viewJuanaDoe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navega a la pantalla de Rutinas del entrenador
-                startActivity(new Intent(InicioEntrenadorActivity.this, RutinasEntrenadorActivity.class));
-            }
-        });
+    @NonNull
+    private TrainerDashboardData loadDashboardDataFromAssets() {
+        String trainerName = null;
+        List<TrainerStudent> students = new ArrayList<>();
 
-        // Configurar el click para el botón de Perfil
-        profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navega a la pantalla de Perfil del entrenador
-                startActivity(new Intent(InicioEntrenadorActivity.this, PerfilEntrenadorActivity.class));
+        try (InputStream inputStream = getAssets().open(DASHBOARD_ASSET);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
             }
-        });
+
+            JSONObject dashboardObject = new JSONObject(builder.toString());
+            JSONObject trainerObject = dashboardObject.optJSONObject("trainer");
+            if (trainerObject != null) {
+                trainerName = trainerObject.optString("fullName", trainerName);
+            }
+
+            JSONArray studentsArray = dashboardObject.optJSONArray("students");
+            if (studentsArray != null) {
+                for (int i = 0; i < studentsArray.length(); i++) {
+                    JSONObject studentObject = studentsArray.optJSONObject(i);
+                    if (studentObject == null) {
+                        continue;
+                    }
+
+                    String id = studentObject.optString("id", null);
+                    String fullName = studentObject.optString("fullName", null);
+                    if (!TextUtils.isEmpty(fullName)) {
+                        students.add(new TrainerStudent(id, fullName));
+                    }
+                }
+            }
+        } catch (IOException | JSONException exception) {
+            Log.e(TAG, "Error al cargar los datos del entrenador", exception);
+        }
+
+        return new TrainerDashboardData(trainerName, students);
     }
 }

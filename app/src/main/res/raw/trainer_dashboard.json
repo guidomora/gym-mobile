@@ -1,0 +1,20 @@
+{
+  "trainer": {
+    "id": "trainer-001",
+    "fullName": "Nombre entrenador"
+  },
+  "students": [
+    {
+      "id": "student-001",
+      "fullName": "John Doe"
+    },
+    {
+      "id": "student-002",
+      "fullName": "Roberto Perez"
+    },
+    {
+      "id": "student-003",
+      "fullName": "Juana Doe"
+    }
+  ]
+}
