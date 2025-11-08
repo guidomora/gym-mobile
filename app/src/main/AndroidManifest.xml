@@ -23,7 +23,7 @@
         <activity android:name=".RutinaEntrenadorActivity" />
         <activity android:name=".HoyActivity" />
         <activity android:name=".PerfilActivity" />
-
+        <activity android:name=".InicioAdminActivity" />
         <activity android:name=".InicioEntrenadorActivity" />
         <activity android:name=".RutinasActivity" />
         <activity android:name=".RutinaActivity" />
