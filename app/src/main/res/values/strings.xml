@@ -34,4 +34,17 @@
     <string name="routine_meta_format">%1$d min · %2$s</string>
     <string name="routine_meta_only_duration">%1$d min</string>
     <string name="routine_empty_exercises">No hay ejercicios cargados aún.</string>
+    <string name="trainer_students_title">Alumnos</string>
+    <string name="trainer_student_label">Alumno: %1$s</string>
+    <string name="trainer_student_placeholder">Alumno sin nombre</string>
+    <string name="trainer_routines_title">Rutinas</string>
+    <string name="trainer_add_routine_cta">Rutina +</string>
+    <string name="trainer_no_routines_assigned">Este alumno aún no tiene rutinas asignadas.</string>
+    <string name="trainer_back_content_description">Volver</string>
+    <string name="trainer_home_content_description">Inicio</string>
+    <string name="trainer_home_label">Inicio</string>
+    <string name="trainer_profile_content_description">Perfil</string>
+    <string name="trainer_profile_label">Perfil</string>
+    <string name="trainer_edit_routine_content_description">Editar rutina</string>
+    <string name="trainer_delete_routine_content_description">Eliminar rutina</string>
 </resources>

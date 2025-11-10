@@ -6,15 +6,27 @@
   "students": [
     {
       "id": "student-001",
-      "fullName": "John Doe"
+      "fullName": "John Doe",
+      "routineIds": [
+        "routine_pecho",
+        "routine_hombros",
+        "routine_piernas"
+      ]
     },
     {
       "id": "student-002",
-      "fullName": "Roberto Perez"
+      "fullName": "Roberto Perez",
+      "routineIds": [
+        "routine_piernas",
+        "routine_brazos"
+      ]
     },
     {
       "id": "student-003",
-      "fullName": "Juana Doe"
+      "fullName": "Juana Doe",
+      "routineIds": [
+        "routine_hombros"
+      ]
     }
   ]
 }
