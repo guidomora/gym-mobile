@@ -70,7 +70,7 @@ public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAd
         RoutineViewHolder(@NonNull View itemView, OnRoutineSelectedListener onRoutineSelectedListener) {
             super(itemView);
             this.onRoutineSelectedListener = onRoutineSelectedListener;
-            nameTextView = (TextView) itemView.findViewById(R.id.tv_trainer_name);
+            nameTextView = (TextView) itemView.findViewById(R.id.tv_routine_name);
             metaTextView = (TextView) itemView.findViewById(R.id.tv_routine_meta);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
