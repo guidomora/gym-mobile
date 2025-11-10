@@ -4,7 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,13 +16,10 @@
         android:layout_marginBottom="12dp"
         android:background="@drawable/bg_routine_card"
         android:baselineAligned="false"
-        android:clickable="true"
         android:elevation="4dp"
-        android:focusable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:foreground="?attr/selectableItemBackground"
         tools:ignore="MissingConstraints">
 
         <ImageView
