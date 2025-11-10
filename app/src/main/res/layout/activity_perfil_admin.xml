@@ -219,7 +219,7 @@
         android:id="@+id/btn_edit_profile"
         android:layout_width="159dp"
         android:layout_height="60dp"
-        android:layout_marginEnd="204dp"
+
         android:background="@drawable/blue_button"
         android:drawableLeft="@drawable/edit_white"
         android:drawablePadding="12dp"
@@ -232,9 +232,10 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:backgroundTint="@null"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="350dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/group_birthdate"
+        app:layout_constraintStart_toStartOf="parent"
+         />
 
     <Button
         android:id="@+id/btn_save"
@@ -249,9 +250,10 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:backgroundTint="@null"
-        tools:layout_editor_absoluteX="194dp"
-        tools:layout_editor_absoluteY="553dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+         />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
