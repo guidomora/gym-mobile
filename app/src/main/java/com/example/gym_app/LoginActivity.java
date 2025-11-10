@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
         // En este punto se podrá hacer la llamada al backend con las credenciales.
         String confirmationMessage = getString(R.string.login_form_ready_message, credentials.getUsername());
         Toast.makeText(this, confirmationMessage, Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, RutinasActivity.class));
+        startActivity(new Intent(this, InicioEntrenadorActivity.class));
         finish();
     }
 }

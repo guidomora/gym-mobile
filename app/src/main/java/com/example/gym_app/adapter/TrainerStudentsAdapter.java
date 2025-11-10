@@ -42,14 +42,18 @@ public class TrainerStudentsAdapter extends RecyclerView.Adapter<TrainerStudents
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
         final TrainerStudent student = students.get(position);
         holder.studentName.setText(student.getFullName());
-        holder.viewButton.setOnClickListener(new View.OnClickListener() {
+
+        View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
                     listener.onStudentSelected(student);
                 }
             }
-        });
+        };
+
+        holder.itemView.setOnClickListener(clickListener);
+        holder.viewButton.setOnClickListener(clickListener);
     }
 
     @Override
