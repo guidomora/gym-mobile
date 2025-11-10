@@ -13,37 +13,45 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.gym_app.R;
 import com.example.gym_app.model.Routine;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import java.util.Objects;
 
 public class RoutineAdapter extends ListAdapter<Routine, RoutineAdapter.RoutineViewHolder> {
 
+    public interface OnRoutineClickListener {
+        void onRoutineClick(Routine routine);
+    }
+
     private static final DiffUtil.ItemCallback<Routine> DIFF_CALLBACK = new DiffUtil.ItemCallback<Routine>() {
         @Override
         public boolean areItemsTheSame(@NonNull Routine oldItem, @NonNull Routine newItem) {
+            if (!oldItem.getId().isEmpty() || !newItem.getId().isEmpty()) {
+                return Objects.equals(oldItem.getId(), newItem.getId());
+            }
             return Objects.equals(oldItem.getName(), newItem.getName())
                     && Objects.equals(oldItem.getDayOfWeek(), newItem.getDayOfWeek());
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Routine oldItem, @NonNull Routine newItem) {
-            return Objects.equals(oldItem.getName(), newItem.getName())
+            return Objects.equals(oldItem.getId(), newItem.getId())
+                    && Objects.equals(oldItem.getName(), newItem.getName())
                     && Objects.equals(oldItem.getDayOfWeek(), newItem.getDayOfWeek())
                     && oldItem.getDurationInMinutes() == newItem.getDurationInMinutes();
         }
     };
 
-    public RoutineAdapter() {
+    private final OnRoutineClickListener onRoutineClickListener;
+
+    public RoutineAdapter(OnRoutineClickListener onRoutineClickListener) {
         super(DIFF_CALLBACK);
+        this.onRoutineClickListener = onRoutineClickListener;
     }
 
     @NonNull
     @Override
     public RoutineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_routine_card, parent, false);
-        return new RoutineViewHolder(view);
+        return new RoutineViewHolder(view, onRoutineClickListener);
     }
 
     @Override
@@ -55,17 +63,35 @@ public class RoutineAdapter extends ListAdapter<Routine, RoutineAdapter.RoutineV
     static class RoutineViewHolder extends RecyclerView.ViewHolder {
         private final TextView nameTextView;
         private final TextView metaTextView;
+        private Routine routine;
 
-        RoutineViewHolder(@NonNull View itemView) {
+        RoutineViewHolder(@NonNull View itemView, OnRoutineClickListener onRoutineClickListener) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.tv_routine_name);
             metaTextView = itemView.findViewById(R.id.tv_routine_meta);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (routine != null && onRoutineClickListener != null) {
+                        onRoutineClickListener.onRoutineClick(routine);
+                    }
+                }
+            });
         }
 
         void bind(Routine routine) {
+            this.routine = routine;
             nameTextView.setText(routine.getName());
-            String meta = itemView.getContext().getString(R.string.routine_meta_format, routine.getDurationInMinutes(), routine.getDayOfWeek());
+            String meta = buildMetaText(routine);
             metaTextView.setText(meta);
+        }
+
+        private String buildMetaText(Routine routine) {
+            String day = routine.getDayOfWeek();
+            if (day == null || day.isEmpty()) {
+                return itemView.getContext().getString(R.string.routine_meta_only_duration, routine.getDurationInMinutes());
+            }
+            return itemView.getContext().getString(R.string.routine_meta_format, routine.getDurationInMinutes(), day);
         }
     }
 }

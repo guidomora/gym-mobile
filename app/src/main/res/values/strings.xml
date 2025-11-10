@@ -31,5 +31,7 @@
         <item>Jueves</item>
         <item>Viernes</item>
     </string-array>
-    <string name="routine_meta_format">%1$d min %2$s</string>
+    <string name="routine_meta_format">%1$d min · %2$s</string>
+    <string name="routine_meta_only_duration">%1$d min</string>
+    <string name="routine_empty_exercises">No hay ejercicios cargados aún.</string>
 </resources>

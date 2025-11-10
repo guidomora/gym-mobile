@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gym_app.adapter.RoutineAdapter;
 import com.example.gym_app.data.RoutineLocalDataSource;
+import com.example.gym_app.model.Routine;
 
 public class RutinasActivity extends AppCompatActivity {
     @Override
@@ -21,19 +22,21 @@ public class RutinasActivity extends AppCompatActivity {
         RecyclerView routinesRecyclerView = findViewById(R.id.rv_routines);
         routinesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        RoutineAdapter routineAdapter = new RoutineAdapter();
+        RoutineAdapter routineAdapter = new RoutineAdapter(new RoutineAdapter.OnRoutineClickListener() {
+            @Override
+            public void onRoutineClick(Routine routine) {
+                openRoutineDetail(routine);
+            }
+        });
         routinesRecyclerView.setAdapter(routineAdapter);
 
         RoutineLocalDataSource dataSource = new RoutineLocalDataSource();
         routineAdapter.submitList(dataSource.getRoutines(this));
 
-        // Referencias a los elementos de la barra de navegación
         LinearLayout homeButton = findViewById(R.id.nav_home);
         LinearLayout todayButton = findViewById(R.id.nav_today);
         LinearLayout profileButton = findViewById(R.id.nav_profile);
 
-        // Ya estás en la pantalla de Rutinas, no necesitas un listener para este botón
-        // Opcionalmente, puedes dejarlo vacío o mostrar un Toast.
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,7 +47,6 @@ public class RutinasActivity extends AppCompatActivity {
         todayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navega a la pantalla de Hoy
                 startActivity(new Intent(RutinasActivity.this, HoyActivity.class));
             }
         });
@@ -52,9 +54,17 @@ public class RutinasActivity extends AppCompatActivity {
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navega a la pantalla de Perfil
                 startActivity(new Intent(RutinasActivity.this, PerfilActivity.class));
             }
         });
+    }
+
+    private void openRoutineDetail(Routine routine) {
+        Intent intent = new Intent(this, RutinaActivity.class);
+        intent.putExtra(RutinaActivity.EXTRA_ROUTINE_ID, routine.getId());
+        intent.putExtra(RutinaActivity.EXTRA_ROUTINE_NAME, routine.getName());
+        intent.putExtra(RutinaActivity.EXTRA_ROUTINE_DURATION, routine.getDurationInMinutes());
+        intent.putExtra(RutinaActivity.EXTRA_ROUTINE_DAY, routine.getDayOfWeek());
+        startActivity(intent);
     }
 }

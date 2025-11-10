@@ -1,22 +1,62 @@
 [
   {
+    "id": "routine_pecho",
     "name": "Pecho",
     "duration": 60,
-    "day": "Lunes"
+    "day": "Lunes",
+    "exercises": [
+      {
+        "name": "Press de banca con barra",
+        "setsReps": "4 series x 8-10 repeticiones",
+        "rest": "Descanso: 90 segundos"
+      },
+      {
+        "name": "Press inclinado con mancuernas",
+        "setsReps": "3 series x 10-12 repeticiones",
+        "rest": "Descanso: 75 segundos"
+      },
+      {
+        "name": "Aperturas en máquina o poleas",
+        "setsReps": "3 series x 12-15 repeticiones",
+        "rest": "Descanso: 60 segundos"
+      }
+    ]
   },
   {
+    "id": "routine_hombros",
     "name": "Hombros",
     "duration": 45,
-    "day": "Martes"
+    "day": "Martes",
+    "exercises": [
+      {
+        "name": "Press militar con barra",
+        "setsReps": "4 series x 8-10 repeticiones",
+        "rest": "Descanso: 90 segundos"
+      },
+      {
+        "name": "Elevaciones laterales con mancuernas",
+        "setsReps": "3 series x 12-15 repeticiones",
+        "rest": "Descanso: 60 segundos"
+      },
+      {
+        "name": "Elevaciones posteriores en peck deck",
+        "setsReps": "3 series x 12-15 repeticiones",
+        "rest": "Descanso: 60 segundos"
+      }
+    ]
   },
   {
+    "id": "routine_piernas",
     "name": "Piernas",
     "duration": 60,
-    "day": "Miércoles"
+    "day": "Miércoles",
+    "exercises": []
   },
   {
+    "id": "routine_brazos",
     "name": "Tríceps y brazos",
     "duration": 80,
-    "day": "Viernes"
+    "day": "Viernes",
+    "exercises": []
   }
 ]
