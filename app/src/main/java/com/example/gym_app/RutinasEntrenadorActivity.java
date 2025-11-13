@@ -49,6 +49,17 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
 
         routinesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         routinesRecyclerView.setHasFixedSize(true);
+        routineAdapter = new TrainerRoutineAdapter(routine -> {
+            Intent intent = new Intent(RutinasEntrenadorActivity.this, RutinaEntrenadorActivity.class);
+            if (routine != null) {
+                if (routine.getId() != null && !routine.getId().isEmpty()) {
+                    intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_ID, routine.getId());
+                }
+                intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_NAME, routine.getName());
+                intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_DAY, routine.getDayOfWeek());
+            }
+            startActivity(intent);
+        });
 
         routineAdapter = new TrainerRoutineAdapter(routine ->
                 startActivity(new Intent(RutinasEntrenadorActivity.this, RutinaEntrenadorActivity.class)));

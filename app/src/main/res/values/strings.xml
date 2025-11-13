@@ -47,4 +47,6 @@
     <string name="trainer_profile_label">Perfil</string>
     <string name="trainer_edit_routine_content_description">Editar rutina</string>
     <string name="trainer_delete_routine_content_description">Eliminar rutina</string>
+    <string name="trainer_routine_placeholder">Rutina sin nombre</string>
+    <string name="trainer_routine_saved_message">Rutina &quot;%1$s&quot; guardada con %2$d ejercicios (cambios temporales).</string>
 </resources>
