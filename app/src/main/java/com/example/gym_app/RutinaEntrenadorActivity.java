@@ -37,6 +37,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     private EditText routineNameEditText;
     private Spinner routineDaySpinner;
     private TextView emptyStateTextView;
+    private TextView exercisesHeaderTextView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
         routineNameEditText = findViewById(R.id.et_routine_name);
         routineDaySpinner = findViewById(R.id.spinner_days);
         emptyStateTextView = findViewById(R.id.tv_empty_state);
+        exercisesHeaderTextView = findViewById(R.id.tv_exercises_title);
         RecyclerView exercisesRecyclerView = findViewById(R.id.rv_exercises);
         Button addExerciseButton = findViewById(R.id.btn_add_exercise);
         Button saveButton = findViewById(R.id.btn_save);
@@ -150,9 +152,18 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     }
 
     private void updateEmptyState(int itemCount) {
-        if (emptyStateTextView == null) {
+        if (emptyStateTextView != null) {
+            emptyStateTextView.setVisibility(itemCount == 0 ? View.VISIBLE : View.GONE);
+        }
+        updateExercisesHeader(itemCount);
+    }
+
+    private void updateExercisesHeader(int itemCount) {
+        if (exercisesHeaderTextView == null) {
             return;
         }
-        emptyStateTextView.setVisibility(itemCount == 0 ? View.VISIBLE : View.GONE);
+        String headerText = getResources().getQuantityString(
+                R.plurals.trainer_exercises_header, itemCount, itemCount);
+        exercisesHeaderTextView.setText(headerText);
     }
 }

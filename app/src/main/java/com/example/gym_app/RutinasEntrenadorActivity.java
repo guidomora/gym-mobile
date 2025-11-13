@@ -50,26 +50,8 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
 
         routinesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         routinesRecyclerView.setHasFixedSize(true);
-        routineAdapter = new TrainerRoutineAdapter(routine -> {
-            if (routine == null) {
-                startActivity(new Intent(RutinasEntrenadorActivity.this, RutinaEntrenadorActivity.class));
-                return;
-            }
-            Intent intent = new Intent(RutinasEntrenadorActivity.this, RutinaEntrenadorActivity.class);
-            if (!TextUtils.isEmpty(routine.getId())) {
-                intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_ID, routine.getId());
-            }
-            if (!TextUtils.isEmpty(routine.getName())) {
-                intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_NAME, routine.getName());
-            }
-            if (!TextUtils.isEmpty(routine.getDayOfWeek())) {
-                intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_DAY, routine.getDayOfWeek());
-            }
-            startActivity(intent);
-        });
+        routineAdapter = new TrainerRoutineAdapter(routine -> navigateToRoutineEditor(routine));
 
-        routineAdapter = new TrainerRoutineAdapter(routine ->
-                startActivity(new Intent(RutinasEntrenadorActivity.this, RutinaEntrenadorActivity.class)));
         routinesRecyclerView.setAdapter(routineAdapter);
 
         String studentId = getIntent().getStringExtra(EXTRA_STUDENT_ID);
@@ -101,8 +83,7 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
 
         backButton.setOnClickListener(v -> finish());
 
-        addRoutineButton.setOnClickListener(v ->
-                startActivity(new Intent(RutinasEntrenadorActivity.this, RutinaEntrenadorActivity.class)));
+        addRoutineButton.setOnClickListener(v -> navigateToRoutineEditor(null));
 
         homeButton.setOnClickListener(v ->
                 startActivity(new Intent(RutinasEntrenadorActivity.this, InicioEntrenadorActivity.class)));
@@ -111,6 +92,21 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
                 startActivity(new Intent(RutinasEntrenadorActivity.this, PerfilEntrenadorActivity.class)));
     }
 
+    private void navigateToRoutineEditor(@Nullable Routine routine) {
+        Intent intent = new Intent(RutinasEntrenadorActivity.this, RutinaEntrenadorActivity.class);
+        if (routine != null) {
+            if (!TextUtils.isEmpty(routine.getId())) {
+                intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_ID, routine.getId());
+            }
+            if (!TextUtils.isEmpty(routine.getName())) {
+                intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_NAME, routine.getName());
+            }
+            if (!TextUtils.isEmpty(routine.getDayOfWeek())) {
+                intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_DAY, routine.getDayOfWeek());
+            }
+        }
+        startActivity(intent);
+    }
     private List<Routine> loadStudentRoutines(@Nullable List<String> routineIds) {
         if (routineIds == null || routineIds.isEmpty()) {
             return Collections.emptyList();

@@ -48,5 +48,10 @@
     <string name="trainer_edit_routine_content_description">Editar rutina</string>
     <string name="trainer_delete_routine_content_description">Eliminar rutina</string>
     <string name="trainer_routine_placeholder">Rutina sin nombre</string>
+    <string name="trainer_exercises_header_placeholder">Ejercicios</string>
+    <plurals name="trainer_exercises_header">
+        <item quantity="one">Ejercicio (%d)</item>
+        <item quantity="other">Ejercicios (%d)</item>
+    </plurals>
     <string name="trainer_routine_saved_message">Rutina &quot;%1$s&quot; guardada con %2$d ejercicios (cambios temporales).</string>
 </resources>
