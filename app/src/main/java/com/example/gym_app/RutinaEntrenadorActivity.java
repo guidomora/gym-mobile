@@ -55,14 +55,8 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
         LinearLayout profileButton = findViewById(R.id.nav_profile);
 
         exerciseAdapter = new EditableExerciseAdapter(this::updateEmptyState);
-        exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(this) {
-            @Override
-            public boolean canScrollVertically() {
-                // Disable the internal scrolling behaviour so the ScrollView can
-                // calculate the full height of the list and display every item.
-                return false;
-            }
-        });
+        exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        exercisesRecyclerView.setHasFixedSize(false);
         exercisesRecyclerView.setNestedScrollingEnabled(false);
         exercisesRecyclerView.setAdapter(exerciseAdapter);
 

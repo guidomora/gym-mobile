@@ -7,7 +7,7 @@
     android:background="#F5F6FA"
     tools:context=".RutinaActivity">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_content"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -158,7 +158,7 @@
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/bottom_nav"
