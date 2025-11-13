@@ -67,7 +67,6 @@ public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAd
         private final TextView nameTextView;
         private final TextView metaTextView;
         private Routine routine;
-        private final ImageButton editButton;
         private final OnRoutineSelectedListener onRoutineSelectedListener;
 
         RoutineViewHolder(@NonNull View itemView, OnRoutineSelectedListener onRoutineSelectedListener) {
@@ -75,6 +74,7 @@ public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAd
             this.onRoutineSelectedListener = onRoutineSelectedListener;
             nameTextView = (TextView) itemView.findViewById(R.id.tv_routine_name);
             metaTextView = (TextView) itemView.findViewById(R.id.tv_routine_meta);
+            ImageButton editButton = itemView.findViewById(R.id.btn_trainer_edit_routine);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
