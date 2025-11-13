@@ -1,8 +1,10 @@
 package com.example.gym_app.adapter;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,8 +26,8 @@ public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAd
     private static final DiffUtil.ItemCallback<Routine> DIFF_CALLBACK = new DiffUtil.ItemCallback<Routine>() {
         @Override
         public boolean areItemsTheSame(@NonNull Routine oldItem, @NonNull Routine newItem) {
-            if (!oldItem.getId().isEmpty() || !newItem.getId().isEmpty()) {
-                return Objects.equals(oldItem.getId(), newItem.getId());
+            if (!TextUtils.isEmpty(oldItem.getId()) || !TextUtils.isEmpty(newItem.getId())) {
+                return TextUtils.equals(oldItem.getId(), newItem.getId());
             }
             return Objects.equals(oldItem.getName(), newItem.getName())
                     && Objects.equals(oldItem.getDayOfWeek(), newItem.getDayOfWeek());
@@ -33,7 +35,7 @@ public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAd
 
         @Override
         public boolean areContentsTheSame(@NonNull Routine oldItem, @NonNull Routine newItem) {
-            return Objects.equals(oldItem.getId(), newItem.getId())
+            return TextUtils.equals(oldItem.getId(), newItem.getId())
                     && Objects.equals(oldItem.getName(), newItem.getName())
                     && Objects.equals(oldItem.getDayOfWeek(), newItem.getDayOfWeek())
                     && oldItem.getDurationInMinutes() == newItem.getDurationInMinutes();
@@ -65,6 +67,7 @@ public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAd
         private final TextView nameTextView;
         private final TextView metaTextView;
         private Routine routine;
+        private final ImageButton editButton;
         private final OnRoutineSelectedListener onRoutineSelectedListener;
 
         RoutineViewHolder(@NonNull View itemView, OnRoutineSelectedListener onRoutineSelectedListener) {
@@ -80,6 +83,18 @@ public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAd
                     }
                 }
             });
+            if (editButton != null) {
+                editButton.setClickable(true);
+                editButton.setFocusable(true);
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (routine != null && RoutineViewHolder.this.onRoutineSelectedListener != null) {
+                            RoutineViewHolder.this.onRoutineSelectedListener.onRoutineSelected(routine);
+                        }
+                    }
+                });
+            }
         }
 
         void bind(Routine routine) {

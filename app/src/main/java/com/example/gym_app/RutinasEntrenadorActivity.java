@@ -2,6 +2,7 @@ package com.example.gym_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -50,12 +51,18 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
         routinesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         routinesRecyclerView.setHasFixedSize(true);
         routineAdapter = new TrainerRoutineAdapter(routine -> {
+            if (routine == null) {
+                startActivity(new Intent(RutinasEntrenadorActivity.this, RutinaEntrenadorActivity.class));
+                return;
+            }
             Intent intent = new Intent(RutinasEntrenadorActivity.this, RutinaEntrenadorActivity.class);
-            if (routine != null) {
-                if (routine.getId() != null && !routine.getId().isEmpty()) {
-                    intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_ID, routine.getId());
-                }
+            if (!TextUtils.isEmpty(routine.getId())) {
+                intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_ID, routine.getId());
+            }
+            if (!TextUtils.isEmpty(routine.getName())) {
                 intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_NAME, routine.getName());
+            }
+            if (!TextUtils.isEmpty(routine.getDayOfWeek())) {
                 intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_DAY, routine.getDayOfWeek());
             }
             startActivity(intent);

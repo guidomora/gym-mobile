@@ -116,36 +116,16 @@ public class EditableExerciseAdapter extends RecyclerView.Adapter<EditableExerci
             weightEditText = itemView.findViewById(R.id.et_weight);
             deleteButton = itemView.findViewById(R.id.btn_delete_exercise);
 
-            nameWatcher = new ExerciseFieldWatcher(value -> {
-                EditableExercise exercise = nameWatcher.getExercise();
-                if (exercise != null) {
-                    exercise.setName(value);
-                }
-            });
-            seriesWatcher = new ExerciseFieldWatcher(value -> {
-                EditableExercise exercise = seriesWatcher.getExercise();
-                if (exercise != null) {
-                    exercise.setSeries(value);
-                }
-            });
-            repetitionsWatcher = new ExerciseFieldWatcher(value -> {
-                EditableExercise exercise = repetitionsWatcher.getExercise();
-                if (exercise != null) {
-                    exercise.setRepetitions(value);
-                }
-            });
-            restWatcher = new ExerciseFieldWatcher(value -> {
-                EditableExercise exercise = restWatcher.getExercise();
-                if (exercise != null) {
-                    exercise.setRest(value);
-                }
-            });
-            weightWatcher = new ExerciseFieldWatcher(value -> {
-                EditableExercise exercise = weightWatcher.getExercise();
-                if (exercise != null) {
-                    exercise.setSuggestedWeight(value);
-                }
-            });
+            nameWatcher = new ExerciseFieldWatcher((exercise, value) ->
+                    exercise.setName(value));
+            seriesWatcher = new ExerciseFieldWatcher((exercise, value) ->
+                    exercise.setSeries(value));
+            repetitionsWatcher = new ExerciseFieldWatcher((exercise, value) ->
+                    exercise.setRepetitions(value));
+            restWatcher = new ExerciseFieldWatcher((exercise, value) ->
+                    exercise.setRest(value));
+            weightWatcher = new ExerciseFieldWatcher((exercise, value) ->
+                    exercise.setSuggestedWeight(value));
 
             nameEditText.addTextChangedListener(nameWatcher);
             seriesEditText.addTextChangedListener(seriesWatcher);
@@ -197,15 +177,15 @@ public class EditableExerciseAdapter extends RecyclerView.Adapter<EditableExerci
 
     private static class ExerciseFieldWatcher implements TextWatcher {
 
-        interface ValueConsumer {
-            void consume(String value);
+        interface ExerciseValueConsumer {
+            void consume(EditableExercise exercise, String value);
         }
 
-        private final ValueConsumer consumer;
+        private final ExerciseValueConsumer consumer;
         private EditableExercise exercise;
         private boolean ignoreChanges;
 
-        ExerciseFieldWatcher(ValueConsumer consumer) {
+        ExerciseFieldWatcher(ExerciseValueConsumer consumer) {
             this.consumer = consumer;
         }
 
@@ -236,7 +216,7 @@ public class EditableExerciseAdapter extends RecyclerView.Adapter<EditableExerci
             if (ignoreChanges || exercise == null) {
                 return;
             }
-            consumer.consume(s == null ? "" : s.toString());
+            consumer.consume(exercise, s == null ? "" : s.toString());
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.gym_app.adapter;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,8 @@ public class RoutineAdapter extends ListAdapter<Routine, RoutineAdapter.RoutineV
     private static final DiffUtil.ItemCallback<Routine> DIFF_CALLBACK = new DiffUtil.ItemCallback<Routine>() {
         @Override
         public boolean areItemsTheSame(@NonNull Routine oldItem, @NonNull Routine newItem) {
-            if (!oldItem.getId().isEmpty() || !newItem.getId().isEmpty()) {
-                return Objects.equals(oldItem.getId(), newItem.getId());
+            if (!TextUtils.isEmpty(oldItem.getId()) || !TextUtils.isEmpty(newItem.getId())) {
+                return TextUtils.equals(oldItem.getId(), newItem.getId());
             }
             return Objects.equals(oldItem.getName(), newItem.getName())
                     && Objects.equals(oldItem.getDayOfWeek(), newItem.getDayOfWeek());
@@ -33,7 +34,7 @@ public class RoutineAdapter extends ListAdapter<Routine, RoutineAdapter.RoutineV
 
         @Override
         public boolean areContentsTheSame(@NonNull Routine oldItem, @NonNull Routine newItem) {
-            return Objects.equals(oldItem.getId(), newItem.getId())
+            return TextUtils.equals(oldItem.getId(), newItem.getId())
                     && Objects.equals(oldItem.getName(), newItem.getName())
                     && Objects.equals(oldItem.getDayOfWeek(), newItem.getDayOfWeek())
                     && oldItem.getDurationInMinutes() == newItem.getDurationInMinutes();
