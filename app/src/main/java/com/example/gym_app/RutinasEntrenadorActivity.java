@@ -32,7 +32,9 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
 
     public static final String EXTRA_STUDENT_ID = "extra_student_id";
     public static final String EXTRA_STUDENT_NAME = "extra_student_name";
+    public static final String EXTRA_STUDENT_ROUTINE_IDS = "extra_student_routine_ids";
     private RoutineRepository routineRepository;
+    private TrainerRoutineAdapter routineAdapter;
     private TextView emptyStateTextView;
     private ArrayList<String> studentRoutineIds = new ArrayList<>();
     private List<Routine> currentRoutines = new ArrayList<>();
