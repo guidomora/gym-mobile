@@ -52,9 +52,9 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="#F4F6FA"
-            android:clickable="false"
+            android:clickable="true"
             android:contentDescription="@string/trainer_edit_routine_content_description"
-            android:focusable="false"
+            android:focusable="true"
             android:padding="10dp"
             app:srcCompat="@drawable/edit" />
 
@@ -64,9 +64,9 @@
             android:layout_height="40dp"
             android:layout_marginStart="12dp"
             android:background="#F4F6FA"
-            android:clickable="false"
+            android:clickable="true"
             android:contentDescription="@string/trainer_delete_routine_content_description"
-            android:focusable="false"
+            android:focusable="true"
             android:padding="10dp"
             app:srcCompat="@drawable/trash" />
     </LinearLayout>

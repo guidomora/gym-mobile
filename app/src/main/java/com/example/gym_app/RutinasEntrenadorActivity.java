@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gym_app.adapter.TrainerRoutineAdapter;
+import com.example.gym_app.data.RoutineRepository;
 import com.example.gym_app.data.RoutineLocalDataSource;
 import com.example.gym_app.data.TrainerDashboardLocalDataSource;
 import com.example.gym_app.model.Routine;
@@ -30,10 +32,10 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
 
     public static final String EXTRA_STUDENT_ID = "extra_student_id";
     public static final String EXTRA_STUDENT_NAME = "extra_student_name";
-    public static final String EXTRA_STUDENT_ROUTINE_IDS = "extra_student_routine_ids";
-
-    private TrainerRoutineAdapter routineAdapter;
+    private RoutineRepository routineRepository;
     private TextView emptyStateTextView;
+    private ArrayList<String> studentRoutineIds = new ArrayList<>();
+    private List<Routine> currentRoutines = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,18 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
 
         routinesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         routinesRecyclerView.setHasFixedSize(true);
-        routineAdapter = new TrainerRoutineAdapter(routine -> navigateToRoutineEditor(routine));
+        routineRepository = new RoutineRepository();
+        routineAdapter = new TrainerRoutineAdapter(new TrainerRoutineAdapter.OnRoutineActionListener() {
+            @Override
+            public void onRoutineSelected(Routine routine) {
+                navigateToRoutineEditor(routine);
+            }
+
+            @Override
+            public void onRoutineDeleted(Routine routine) {
+                handleRoutineDeletion(routine);
+            }
+        });
 
         routinesRecyclerView.setAdapter(routineAdapter);
 
@@ -71,15 +84,18 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
             }
         }
 
+        if (routineIds != null) {
+            studentRoutineIds = new ArrayList<>(routineIds);
+        }
         if (studentName != null && !studentName.isEmpty()) {
             studentNameTextView.setText(getString(R.string.trainer_student_label, studentName));
         } else {
             studentNameTextView.setText(R.string.trainer_student_placeholder);
         }
 
-        List<Routine> routines = loadStudentRoutines(routineIds);
-        routineAdapter.submitList(routines);
-        updateEmptyState(routines.isEmpty());
+        currentRoutines = loadStudentRoutines(studentRoutineIds);
+        routineAdapter.submitList(new ArrayList<>(currentRoutines));
+        updateEmptyState(currentRoutines.isEmpty());
 
         backButton.setOnClickListener(v -> finish());
 
@@ -112,29 +128,7 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
             return Collections.emptyList();
         }
 
-        RoutineLocalDataSource routineLocalDataSource = new RoutineLocalDataSource();
-        List<Routine> allRoutines = routineLocalDataSource.getRoutines(this);
-        if (allRoutines.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        Map<String, Routine> routinesById = new HashMap<>();
-        for (Routine routine : allRoutines) {
-            String id = routine.getId();
-            if (id != null && !id.isEmpty()) {
-                routinesById.put(id, routine);
-            }
-        }
-
-        List<Routine> studentRoutines = new ArrayList<>();
-        for (String routineId : routineIds) {
-            Routine routine = routinesById.get(routineId);
-            if (routine != null) {
-                studentRoutines.add(routine);
-            }
-        }
-
-        return studentRoutines;
+        return routineRepository.getRoutinesByIds(this, routineIds);
     }
 
     private void updateEmptyState(boolean isEmpty) {
@@ -142,5 +136,37 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
             return;
         }
         emptyStateTextView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+    }
+
+    private void handleRoutineDeletion(Routine routine) {
+        if (routine == null || TextUtils.isEmpty(routine.getId())) {
+            return;
+        }
+        boolean deleted = routineRepository.deleteRoutine(this, routine.getId());
+        if (!deleted) {
+            Toast.makeText(this, R.string.trainer_routine_delete_error, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        List<Routine> updatedRoutines = new ArrayList<>();
+        for (Routine currentRoutine : currentRoutines) {
+            if (currentRoutine == null || TextUtils.isEmpty(currentRoutine.getId())) {
+                continue;
+            }
+            if (!TextUtils.equals(currentRoutine.getId(), routine.getId())) {
+                updatedRoutines.add(currentRoutine);
+            }
+        }
+        currentRoutines = updatedRoutines;
+        routineAdapter.submitList(new ArrayList<>(currentRoutines));
+        updateEmptyState(currentRoutines.isEmpty());
+        if (studentRoutineIds != null) {
+            studentRoutineIds.remove(routine.getId());
+        }
+        String routineName = TextUtils.isEmpty(routine.getName())
+                ? getString(R.string.trainer_routine_placeholder)
+                : routine.getName();
+        Toast.makeText(this,
+                getString(R.string.trainer_routine_deleted_message, routineName),
+                Toast.LENGTH_SHORT).show();
     }
 }

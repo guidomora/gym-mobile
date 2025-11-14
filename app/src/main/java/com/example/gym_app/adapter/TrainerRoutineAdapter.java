@@ -19,8 +19,10 @@ import java.util.Objects;
 
 public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAdapter.RoutineViewHolder> {
 
-    public interface OnRoutineSelectedListener {
+    public interface OnRoutineActionListener {
         void onRoutineSelected(Routine routine);
+
+        void onRoutineDeleted(Routine routine);
     }
 
     private static final DiffUtil.ItemCallback<Routine> DIFF_CALLBACK = new DiffUtil.ItemCallback<Routine>() {
@@ -42,11 +44,11 @@ public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAd
         }
     };
 
-    private final OnRoutineSelectedListener onRoutineSelectedListener;
+    private final OnRoutineActionListener onRoutineActionListener;
 
-    public TrainerRoutineAdapter(OnRoutineSelectedListener onRoutineSelectedListener) {
+    public TrainerRoutineAdapter(OnRoutineActionListener onRoutineActionListener) {
         super(DIFF_CALLBACK);
-        this.onRoutineSelectedListener = onRoutineSelectedListener;
+        this.onRoutineActionListener = onRoutineActionListener;
     }
 
     @NonNull
@@ -54,7 +56,7 @@ public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAd
     public RoutineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_trainer_routine, parent, false);
-        return new RoutineViewHolder(view, onRoutineSelectedListener);
+        return new RoutineViewHolder(view, onRoutineActionListener);
     }
 
     @Override
@@ -67,19 +69,20 @@ public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAd
         private final TextView nameTextView;
         private final TextView metaTextView;
         private Routine routine;
-        private final OnRoutineSelectedListener onRoutineSelectedListener;
+        private final OnRoutineActionListener onRoutineActionListener;
 
-        RoutineViewHolder(@NonNull View itemView, OnRoutineSelectedListener onRoutineSelectedListener) {
+        RoutineViewHolder(@NonNull View itemView, OnRoutineActionListener onRoutineActionListener) {
             super(itemView);
-            this.onRoutineSelectedListener = onRoutineSelectedListener;
+            this.onRoutineActionListener = onRoutineActionListener;
             nameTextView = (TextView) itemView.findViewById(R.id.tv_routine_name);
             metaTextView = (TextView) itemView.findViewById(R.id.tv_routine_meta);
             ImageButton editButton = itemView.findViewById(R.id.btn_trainer_edit_routine);
+            ImageButton deleteButton = itemView.findViewById(R.id.btn_trainer_delete_routine);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (routine != null && RoutineViewHolder.this.onRoutineSelectedListener != null) {
-                        RoutineViewHolder.this.onRoutineSelectedListener.onRoutineSelected(routine);
+                    if (routine != null && RoutineViewHolder.this.onRoutineActionListener != null) {
+                        RoutineViewHolder.this.onRoutineActionListener.onRoutineSelected(routine);
                     }
                 }
             });
@@ -89,8 +92,20 @@ public class TrainerRoutineAdapter extends ListAdapter<Routine, TrainerRoutineAd
                 editButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (routine != null && RoutineViewHolder.this.onRoutineSelectedListener != null) {
-                            RoutineViewHolder.this.onRoutineSelectedListener.onRoutineSelected(routine);
+                        if (routine != null && RoutineViewHolder.this.onRoutineActionListener != null) {
+                            RoutineViewHolder.this.onRoutineActionListener.onRoutineSelected(routine);
+                        }
+                    }
+                });
+            }
+            if (deleteButton != null) {
+                deleteButton.setClickable(true);
+                deleteButton.setFocusable(true);
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (routine != null && RoutineViewHolder.this.onRoutineActionListener != null) {
+                            RoutineViewHolder.this.onRoutineActionListener.onRoutineDeleted(routine);
                         }
                     }
                 });

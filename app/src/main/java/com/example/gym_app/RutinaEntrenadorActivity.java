@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gym_app.adapter.EditableExerciseAdapter;
+import com.example.gym_app.data.RoutineRepository;
 import com.example.gym_app.data.RoutineLocalDataSource;
 import com.example.gym_app.model.EditableExercise;
 import com.example.gym_app.model.Exercise;
@@ -30,6 +31,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     public static final String EXTRA_ROUTINE_ID = "extra_trainer_routine_id";
     public static final String EXTRA_ROUTINE_NAME = "extra_trainer_routine_name";
     public static final String EXTRA_ROUTINE_DAY = "extra_trainer_routine_day";
+    private final RoutineRepository routineRepository = new RoutineRepository();
 
     private final RoutineLocalDataSource routineLocalDataSource = new RoutineLocalDataSource();
 
@@ -118,7 +120,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(routineId)) {
             return null;
         }
-        return routineLocalDataSource.getRoutineById(this, routineId);
+        return routineRepository.getRoutineById(this, routineId);
     }
 
     private List<Exercise> buildExerciseSnapshot() {

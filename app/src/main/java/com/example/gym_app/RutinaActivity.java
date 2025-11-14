@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gym_app.adapter.ExerciseAdapter;
+import com.example.gym_app.data.RoutineRepository;
 import com.example.gym_app.data.RoutineLocalDataSource;
 import com.example.gym_app.model.Exercise;
 import com.example.gym_app.model.Routine;
@@ -101,8 +102,8 @@ public class RutinaActivity extends AppCompatActivity {
         if (routineId == null || routineId.isEmpty()) {
             return null;
         }
-        RoutineLocalDataSource dataSource = new RoutineLocalDataSource();
-        return dataSource.getRoutineById(this, routineId);
+        RoutineRepository routineRepository = new RoutineRepository();
+        return routineRepository.getRoutineById(this, routineId);
     }
 
     private void bindExercises(List<Exercise> exercises, RecyclerView recyclerView, TextView emptyState) {

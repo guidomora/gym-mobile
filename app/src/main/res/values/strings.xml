@@ -54,4 +54,6 @@
         <item quantity="other">Ejercicios (%d)</item>
     </plurals>
     <string name="trainer_routine_saved_message">Rutina &quot;%1$s&quot; guardada con %2$d ejercicios (cambios temporales).</string>
+    <string name="trainer_routine_deleted_message">Rutina &quot;%1$s&quot; eliminada (cambios temporales).</string>
+    <string name="trainer_routine_delete_error">No se pudo eliminar la rutina. Intenta nuevamente.</string>
 </resources>
