@@ -1,21 +1,21 @@
-package com.example.gym_app;
+package com.example.gym_app.model;
 
 import androidx.annotation.NonNull;
 
 public class LoginCredentials {
-    private final String username;
+    private final String email;
     private final String password;
     private final boolean rememberMe;
 
-    public LoginCredentials(@NonNull String username, @NonNull String password, boolean rememberMe) {
-        this.username = username;
+    public LoginCredentials(@NonNull String email, @NonNull String password, boolean rememberMe) {
+        this.email = email;
         this.password = password;
         this.rememberMe = rememberMe;
     }
 
     @NonNull
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
     @NonNull
