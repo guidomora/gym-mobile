@@ -40,11 +40,12 @@ public class AuthRepository {
             @Override
             public void onSuccess(@Nullable LoginApiResponse response) {
                 ongoingLoginCall = null;
-                LoginResult result = buildLoginResult(credentials, response);
+                LoginResult result = buildLoginResult(credentials, response, null);
                 preferencesDataSource.saveSession(context,
                         result.getEmail(),
                         result.getDisplayName(),
                         result.getAuthToken(),
+                        result.getRole(),
                         credentials.isRememberMe());
                 callback.onSuccess(result);
             }
@@ -83,11 +84,12 @@ public class AuthRepository {
             public void onSuccess(@Nullable LoginApiResponse response) {
                 ongoingRegisterCall = null;
                 LoginCredentials credentials = new LoginCredentials(formData.getEmail(), formData.getPassword(), true);
-                LoginResult result = buildLoginResult(credentials, response);
+                LoginResult result = buildLoginResult(credentials, response, formData.getRole());
                 preferencesDataSource.saveSession(context,
                         result.getEmail(),
                         result.getDisplayName(),
                         result.getAuthToken(),
+                        result.getRole(),
                         true);
                 callback.onSuccess(result);
             }
@@ -112,11 +114,14 @@ public class AuthRepository {
         return preferencesDataSource.getSavedLoginData(context);
     }
 
-    private LoginResult buildLoginResult(LoginCredentials credentials, @Nullable LoginApiResponse response) {
+    private LoginResult buildLoginResult(LoginCredentials credentials,
+                                         @Nullable LoginApiResponse response,
+                                         @Nullable String fallbackRole) {
         String email = credentials.getEmail();
         String displayName = null;
         String token = null;
         String message = null;
+        String role = null;
 
         if (response != null) {
             String resolvedEmail = response.getResolvedEmail();
@@ -126,13 +131,18 @@ public class AuthRepository {
             displayName = response.getResolvedDisplayName();
             token = response.getResolvedToken();
             message = response.getMessage();
+            role = response.getResolvedRole();
         }
 
         if (TextUtils.isEmpty(displayName)) {
             displayName = email;
         }
 
-        return new LoginResult(email, displayName, token, message);
+        if (TextUtils.isEmpty(role) && !TextUtils.isEmpty(fallbackRole)) {
+            role = fallbackRole;
+        }
+
+        return new LoginResult(email, displayName, token, message, role);
     }
 
     private String resolveErrorMessage(Context context, @Nullable String errorMessage, @Nullable Throwable throwable) {

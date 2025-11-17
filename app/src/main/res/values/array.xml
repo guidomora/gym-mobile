@@ -2,7 +2,7 @@
 <resources>
     <string-array name="gym_options">
         <item>Super Sport</item>
-        <item>PowerFit</item>
-        <item>Energy Club</item>
+        <item>Fitter</item>
+        <item>Gold Gym</item>
     </string-array>
 </resources>

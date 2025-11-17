@@ -8,12 +8,14 @@ public class SavedLoginData {
     private final String displayName;
     private final String authToken;
     private final boolean rememberMe;
+    private final String role;
 
-    SavedLoginData(String email, String displayName, String authToken, boolean rememberMe) {
+    SavedLoginData(String email, String displayName, String authToken, boolean rememberMe, String role) {
         this.email = email;
         this.displayName = displayName;
         this.authToken = authToken;
         this.rememberMe = rememberMe;
+        this.role = role;
     }
 
     public String getEmail() {
@@ -37,5 +39,8 @@ public class SavedLoginData {
 
     public boolean shouldPrefillEmail() {
         return rememberMe && !TextUtils.isEmpty(email);
+    }
+    public String getRole() {
+        return role;
     }
 }

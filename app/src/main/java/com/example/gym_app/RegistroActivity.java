@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.example.gym_app.data.auth.AuthRepository;
 import com.example.gym_app.model.LoginResult;
-
+import com.example.gym_app.navigation.AuthNavigator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -263,7 +263,10 @@ public class RegistroActivity extends AppCompatActivity {
                     message = getString(R.string.register_success_message, result.getDisplayName());
                 }
                 Toast.makeText(RegistroActivity.this, message, Toast.LENGTH_LONG).show();
-                finish();
+                String resolvedRole = !TextUtils.isEmpty(result.getRole())
+                        ? result.getRole()
+                        : data.getRole();
+                AuthNavigator.navigateToHome(RegistroActivity.this, resolvedRole, true);
             }
 
             @Override

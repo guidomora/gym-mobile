@@ -1,6 +1,5 @@
 package com.example.gym_app;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -21,6 +20,7 @@ import com.example.gym_app.data.auth.AuthRepository;
 import com.example.gym_app.data.auth.SavedLoginData;
 import com.example.gym_app.model.LoginCredentials;
 import com.example.gym_app.model.LoginResult;
+import com.example.gym_app.navigation.AuthNavigator;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -157,8 +157,7 @@ public class LoginActivity extends AppCompatActivity {
                     message = getString(R.string.login_success_message, result.getDisplayName());
                 }
                 Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LoginActivity.this, InicioEntrenadorActivity.class));
-                finish();
+                AuthNavigator.navigateToHome(LoginActivity.this, result.getRole(), false);
             }
 
             @Override

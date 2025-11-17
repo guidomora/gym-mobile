@@ -11,6 +11,7 @@ class AuthPreferencesDataSource {
     private static final String KEY_DISPLAY_NAME = "auth_display_name";
     private static final String KEY_TOKEN = "auth_token";
     private static final String KEY_REMEMBER_ME = "auth_remember_me";
+    private static final String KEY_ROLE = "auth_role";
 
     SavedLoginData getSavedLoginData(Context context) {
         SharedPreferences preferences = getPreferences(context);
@@ -18,16 +19,27 @@ class AuthPreferencesDataSource {
         String email = preferences.getString(KEY_EMAIL, null);
         String displayName = preferences.getString(KEY_DISPLAY_NAME, null);
         String token = preferences.getString(KEY_TOKEN, null);
-        return new SavedLoginData(email, displayName, token, rememberMe);
+        String role = preferences.getString(KEY_ROLE, null);
+        return new SavedLoginData(email, displayName, token, rememberMe, role);
     }
 
-    void saveSession(Context context, String email, String displayName, String authToken, boolean rememberMe) {
+    void saveSession(Context context,
+                     String email,
+                     String displayName,
+                     String authToken,
+                     String role,
+                     boolean rememberMe) {
         SharedPreferences preferences = getPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
         if (!TextUtils.isEmpty(authToken)) {
             editor.putString(KEY_TOKEN, authToken);
         } else {
             editor.remove(KEY_TOKEN);
+        }
+        if (!TextUtils.isEmpty(role)) {
+            editor.putString(KEY_ROLE, role);
+        } else {
+            editor.remove(KEY_ROLE);
         }
         if (rememberMe) {
             editor.putBoolean(KEY_REMEMBER_ME, true);
@@ -43,6 +55,7 @@ class AuthPreferencesDataSource {
             editor.remove(KEY_EMAIL);
             editor.remove(KEY_DISPLAY_NAME);
             editor.remove(KEY_TOKEN);
+            editor.remove(KEY_ROLE);
         }
         editor.apply();
     }
@@ -54,6 +67,7 @@ class AuthPreferencesDataSource {
                 .remove(KEY_EMAIL)
                 .remove(KEY_DISPLAY_NAME)
                 .remove(KEY_TOKEN)
+                .remove(KEY_ROLE)
                 .apply();
     }
 

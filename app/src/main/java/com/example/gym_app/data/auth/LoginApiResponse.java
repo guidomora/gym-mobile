@@ -30,6 +30,14 @@ class LoginApiResponse {
     @SerializedName("fullName")
     private String fullName;
 
+    @SerializedName("role")
+    private String role;
+
+    @SerializedName("userRole")
+    private String userRole;
+
+    @SerializedName("type")
+    private String type;
     @SerializedName("user")
     private ApiUser user;
 
@@ -90,6 +98,23 @@ class LoginApiResponse {
         return null;
     }
 
+    String getResolvedRole() {
+        if (!TextUtils.isEmpty(role)) {
+            return role;
+        }
+        if (!TextUtils.isEmpty(userRole)) {
+            return userRole;
+        }
+        if (!TextUtils.isEmpty(type)) {
+            return type;
+        }
+        ApiUser resolvedUser = firstNonNull(user, data);
+        if (resolvedUser != null) {
+            return resolvedUser.getRole();
+        }
+        return null;
+    }
+
     private ApiUser firstNonNull(ApiUser first, ApiUser second) {
         return first != null ? first : second;
     }
@@ -108,6 +133,14 @@ class LoginApiResponse {
         @SerializedName("fullName")
         private String fullName;
 
+        @SerializedName("role")
+        private String role;
+
+        @SerializedName("userRole")
+        private String userRole;
+
+        @SerializedName("type")
+        private String type;
         String getEmail() {
             if (!TextUtils.isEmpty(email)) {
                 return email;
@@ -136,6 +169,19 @@ class LoginApiResponse {
             }
             if (!TextUtils.isEmpty(email)) {
                 return email;
+            }
+            return null;
+        }
+
+        String getRole() {
+            if (!TextUtils.isEmpty(role)) {
+                return role;
+            }
+            if (!TextUtils.isEmpty(userRole)) {
+                return userRole;
+            }
+            if (!TextUtils.isEmpty(type)) {
+                return type;
             }
             return null;
         }
