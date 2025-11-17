@@ -21,7 +21,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gym_app.data.auth.AuthRepository;
+import com.example.gym_app.model.LoginResult;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class RegistroActivity extends AppCompatActivity {
 
@@ -32,6 +39,10 @@ public class RegistroActivity extends AppCompatActivity {
     private EditText passwordInput;
     private EditText confirmPasswordInput;
     private Spinner gymSpinner;
+    private Spinner roleSpinner;
+    private Button registerButton;
+    private String registerButtonDefaultText;
+    private AuthRepository authRepository;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, RegistroActivity.class);
@@ -44,6 +55,8 @@ public class RegistroActivity extends AppCompatActivity {
 
         bindViews();
         registerInputListeners();
+
+        authRepository = new AuthRepository();
 
         Button registerButton = findViewById(R.id.btn_register);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +86,9 @@ public class RegistroActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.et_password);
         confirmPasswordInput = findViewById(R.id.et_confirm_password);
         gymSpinner = findViewById(R.id.spinner_gym);
+        roleSpinner = findViewById(R.id.spinner_role);
+        registerButton = findViewById(R.id.btn_register);
+        registerButtonDefaultText = registerButton.getText().toString();
 
         ImageView backButton = findViewById(R.id.btn_back);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +119,7 @@ public class RegistroActivity extends AppCompatActivity {
         usernameInput.addTextChangedListener(createErrorCleaner(usernameInput));
         phoneInput.addTextChangedListener(createErrorCleaner(phoneInput));
         emailInput.addTextChangedListener(createErrorCleaner(emailInput));
+        birthdateInput.addTextChangedListener(createErrorCleaner(birthdateInput));
         passwordInput.addTextChangedListener(createErrorCleaner(passwordInput));
         confirmPasswordInput.addTextChangedListener(createErrorCleaner(confirmPasswordInput));
     }
@@ -132,12 +149,13 @@ public class RegistroActivity extends AppCompatActivity {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+
         DatePickerDialog dialog = new DatePickerDialog(
                 this,
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String formatted = String.format("%02d/%02d/%04d", dayOfMonth, month + 1, year);
+                        String formatted = String.format(Locale.getDefault(), "%02d/%02d/%04d", dayOfMonth, month + 1, year);
                         birthdateInput.setText(formatted);
                         birthdateInput.setError(null);
                     }
@@ -158,6 +176,7 @@ public class RegistroActivity extends AppCompatActivity {
         String password = passwordInput.getText() != null ? passwordInput.getText().toString() : "";
         String confirmPassword = confirmPasswordInput.getText() != null ? confirmPasswordInput.getText().toString() : "";
         String selectedGym = gymSpinner.getSelectedItem() != null ? gymSpinner.getSelectedItem().toString() : "";
+        String selectedRole = roleSpinner.getSelectedItem() != null ? roleSpinner.getSelectedItem().toString() : "";
 
         boolean hasError = false;
 
@@ -181,6 +200,15 @@ public class RegistroActivity extends AppCompatActivity {
             hasError = true;
         }
 
+        String apiBirthdate = null;
+        if (!TextUtils.isEmpty(birthdate)) {
+            apiBirthdate = formatBirthdateForApi(birthdate);
+            if (apiBirthdate == null) {
+                birthdateInput.setError(getString(R.string.error_birthdate_format));
+                hasError = true;
+            }
+        }
+
         if (TextUtils.isEmpty(password)) {
             passwordInput.setError(getString(R.string.error_password_required));
             hasError = true;
@@ -199,6 +227,12 @@ public class RegistroActivity extends AppCompatActivity {
             hasError = true;
         }
 
+        String apiRole = mapRoleToApiValue(selectedRole);
+        if (TextUtils.isEmpty(apiRole)) {
+            Toast.makeText(this, R.string.error_role_required, Toast.LENGTH_SHORT).show();
+            hasError = true;
+        }
+
         if (hasError) {
             return;
         }
@@ -209,7 +243,8 @@ public class RegistroActivity extends AppCompatActivity {
                 username,
                 sanitizedPhone,
                 email,
-                birthdate,
+                apiBirthdate,
+                apiRole,
                 password,
                 selectedGym
         );
@@ -218,8 +253,79 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private void onRegisterDataReady(RegisterFormData data) {
-        // Aquí se podrá enviar la información al backend.
-        String message = getString(R.string.register_form_ready_message, data.getUsername());
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        setLoading(true);
+        authRepository.register(this, data, new AuthRepository.RegisterCallback() {
+            @Override
+            public void onSuccess(LoginResult result) {
+                setLoading(false);
+                String message = result.getMessage();
+                if (TextUtils.isEmpty(message)) {
+                    message = getString(R.string.register_success_message, result.getDisplayName());
+                }
+                Toast.makeText(RegistroActivity.this, message, Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                setLoading(false);
+                Toast.makeText(RegistroActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void setLoading(boolean isLoading) {
+        usernameInput.setEnabled(!isLoading);
+        phoneInput.setEnabled(!isLoading);
+        emailInput.setEnabled(!isLoading);
+        birthdateInput.setEnabled(!isLoading);
+        passwordInput.setEnabled(!isLoading);
+        confirmPasswordInput.setEnabled(!isLoading);
+        gymSpinner.setEnabled(!isLoading);
+        roleSpinner.setEnabled(!isLoading);
+        registerButton.setEnabled(!isLoading);
+        if (isLoading) {
+            registerButton.setText(getString(R.string.register_loading_label));
+        } else {
+            registerButton.setText(registerButtonDefaultText);
+        }
+    }
+
+    private String formatBirthdateForApi(String birthdate) {
+        SimpleDateFormat displayFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        displayFormat.setLenient(false);
+        SimpleDateFormat apiFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        try {
+            Date parsedDate = displayFormat.parse(birthdate);
+            if (parsedDate != null) {
+                return apiFormat.format(parsedDate);
+            }
+        } catch (ParseException ignored) {
+            // Ignored, handled by returning null.
+        }
+        return null;
+    }
+
+    private String mapRoleToApiValue(String selectedRole) {
+        if (TextUtils.isEmpty(selectedRole)) {
+            return null;
+        }
+        String studentLabel = getString(R.string.register_role_student);
+        String trainerLabel = getString(R.string.register_role_trainer);
+        if (selectedRole.equalsIgnoreCase(studentLabel)) {
+            return "STUDENT";
+        }
+        if (selectedRole.equalsIgnoreCase(trainerLabel)) {
+            return "TRAINER";
+        }
+        return null;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (authRepository != null) {
+            authRepository.cancelOngoingRegister();
+        }
     }
 }

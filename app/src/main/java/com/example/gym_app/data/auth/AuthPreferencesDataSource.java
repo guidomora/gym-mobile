@@ -24,6 +24,11 @@ class AuthPreferencesDataSource {
     void saveSession(Context context, String email, String displayName, String authToken, boolean rememberMe) {
         SharedPreferences preferences = getPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
+        if (!TextUtils.isEmpty(authToken)) {
+            editor.putString(KEY_TOKEN, authToken);
+        } else {
+            editor.remove(KEY_TOKEN);
+        }
         if (rememberMe) {
             editor.putBoolean(KEY_REMEMBER_ME, true);
             editor.putString(KEY_EMAIL, email);

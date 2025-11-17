@@ -9,6 +9,7 @@ public class RegisterFormData {
     private final String phone;
     private final String email;
     private final String birthdate;
+    private final String role;
     private final String password;
     private final String gym;
 
@@ -16,12 +17,14 @@ public class RegisterFormData {
                             @Nullable String phone,
                             @NonNull String email,
                             @NonNull String birthdate,
+                            @NonNull String role,
                             @NonNull String password,
                             @NonNull String gym) {
         this.username = username;
         this.phone = phone;
         this.email = email;
         this.birthdate = birthdate;
+        this.role = role;
         this.password = password;
         this.gym = gym;
     }
@@ -44,6 +47,11 @@ public class RegisterFormData {
     @NonNull
     public String getBirthdate() {
         return birthdate;
+    }
+
+    @NonNull
+    public String getRole() {
+        return role;
     }
 
     @NonNull

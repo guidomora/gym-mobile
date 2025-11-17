@@ -44,6 +44,28 @@ class AuthRemoteDataSource {
         return call;
     }
 
+    Call<LoginApiResponse> register(RegisterApiRequest request, final RemoteCallback callback) {
+        Call<LoginApiResponse> call = apiService.register(request);
+        call.enqueue(new Callback<LoginApiResponse>() {
+            @Override
+            public void onResponse(Call<LoginApiResponse> call, Response<LoginApiResponse> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+                    return;
+                }
+                callback.onError(extractErrorMessage(response), null);
+            }
+
+            @Override
+            public void onFailure(Call<LoginApiResponse> call, Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+                callback.onError(null, t);
+            }
+        });
+        return call;
+    }
     private String extractErrorMessage(Response<?> response) {
         if (response == null || response.errorBody() == null) {
             return null;

@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.gym_app.R;
+import com.example.gym_app.RegisterFormData;
 import com.example.gym_app.model.LoginCredentials;
 import com.example.gym_app.model.LoginResult;
 
@@ -20,6 +21,7 @@ public class AuthRepository {
     private final AuthPreferencesDataSource preferencesDataSource;
 
     private Call<LoginApiResponse> ongoingLoginCall;
+    private Call<LoginApiResponse> ongoingRegisterCall;
 
     public AuthRepository() {
         this(new AuthRemoteDataSource(), new AuthPreferencesDataSource());
@@ -39,15 +41,11 @@ public class AuthRepository {
             public void onSuccess(@Nullable LoginApiResponse response) {
                 ongoingLoginCall = null;
                 LoginResult result = buildLoginResult(credentials, response);
-                if (credentials.isRememberMe()) {
-                    preferencesDataSource.saveSession(context,
-                            result.getEmail(),
-                            result.getDisplayName(),
-                            result.getAuthToken(),
-                            true);
-                } else {
-                    preferencesDataSource.clearSession(context);
-                }
+                preferencesDataSource.saveSession(context,
+                        result.getEmail(),
+                        result.getDisplayName(),
+                        result.getAuthToken(),
+                        credentials.isRememberMe());
                 callback.onSuccess(result);
             }
 
@@ -67,6 +65,48 @@ public class AuthRepository {
         }
     }
 
+    public void register(final Context context,
+                         final RegisterFormData formData,
+                         final RegisterCallback callback) {
+        cancelOngoingRegister();
+        RegisterApiRequest request = new RegisterApiRequest(
+                formData.getUsername(),
+                formData.getEmail(),
+                formData.getPassword(),
+                formData.getRole(),
+                formData.getPhone(),
+                formData.getBirthdate(),
+                formData.getGym()
+        );
+        ongoingRegisterCall = remoteDataSource.register(request, new AuthRemoteDataSource.RemoteCallback() {
+            @Override
+            public void onSuccess(@Nullable LoginApiResponse response) {
+                ongoingRegisterCall = null;
+                LoginCredentials credentials = new LoginCredentials(formData.getEmail(), formData.getPassword(), true);
+                LoginResult result = buildLoginResult(credentials, response);
+                preferencesDataSource.saveSession(context,
+                        result.getEmail(),
+                        result.getDisplayName(),
+                        result.getAuthToken(),
+                        true);
+                callback.onSuccess(result);
+            }
+
+            @Override
+            public void onError(@Nullable String errorMessage, @Nullable Throwable throwable) {
+                ongoingRegisterCall = null;
+                String message = resolveErrorMessage(context, errorMessage, throwable);
+                callback.onError(message);
+            }
+        });
+    }
+
+    public void cancelOngoingRegister() {
+        if (ongoingRegisterCall != null) {
+            ongoingRegisterCall.cancel();
+            ongoingRegisterCall = null;
+        }
+    }
     @NonNull
     public SavedLoginData getSavedLoginData(Context context) {
         return preferencesDataSource.getSavedLoginData(context);
@@ -106,6 +146,12 @@ public class AuthRepository {
     }
 
     public interface LoginCallback {
+        void onSuccess(@NonNull LoginResult result);
+
+        void onError(@NonNull String errorMessage);
+    }
+
+    public interface RegisterCallback {
         void onSuccess(@NonNull LoginResult result);
 
         void onError(@NonNull String errorMessage);

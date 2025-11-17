@@ -10,4 +10,8 @@ interface AuthApiService {
     @Headers({"Content-Type: application/json"})
     @POST("api/auth/login")
     Call<LoginApiResponse> login(@Body LoginApiRequest request);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("api/auth/register")
+    Call<LoginApiResponse> register(@Body RegisterApiRequest request);
 }
