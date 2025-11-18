@@ -3,6 +3,10 @@ package com.example.gym_app.data;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.example.gym_app.R;
+import com.example.gym_app.data.auth.AuthSessionManager;
+import com.example.gym_app.data.routines.CreateRoutineRequest;
+import com.example.gym_app.data.routines.RoutineRemoteDataSource;
 import com.example.gym_app.model.Routine;
 
 import java.util.ArrayList;
@@ -12,19 +16,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import java.io.IOException;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 public class RoutineRepository {
 
     private final RoutineLocalDataSource routineLocalDataSource;
     private final RoutinePreferencesDataSource routinePreferencesDataSource;
+    private final RoutineRemoteDataSource routineRemoteDataSource;
+    private final AuthSessionManager authSessionManager;
+
+    private retrofit2.Call<Void> ongoingCreateRoutineCall;
 
     public RoutineRepository() {
-        this(new RoutineLocalDataSource(), new RoutinePreferencesDataSource());
+        this(new RoutineLocalDataSource(),
+                new RoutinePreferencesDataSource(),
+                new RoutineRemoteDataSource(),
+                new AuthSessionManager());
     }
 
     RoutineRepository(RoutineLocalDataSource routineLocalDataSource,
-                      RoutinePreferencesDataSource routinePreferencesDataSource) {
+                      RoutinePreferencesDataSource routinePreferencesDataSource,
+                      RoutineRemoteDataSource routineRemoteDataSource,
+                      AuthSessionManager authSessionManager) {
         this.routineLocalDataSource = routineLocalDataSource;
         this.routinePreferencesDataSource = routinePreferencesDataSource;
+        this.routineRemoteDataSource = routineRemoteDataSource;
+        this.authSessionManager = authSessionManager;
     }
 
     public List<Routine> getRoutines(Context context) {
@@ -95,6 +115,38 @@ public class RoutineRepository {
         routinePreferencesDataSource.removeDeletedRoutine(context, routineId);
     }
 
+    public void createRoutine(Context context,
+                              CreateRoutineRequest request,
+                              final CreateRoutineCallback callback) {
+        if (context == null || request == null || callback == null) {
+            return;
+        }
+        cancelRoutineCreation();
+        String authToken = authSessionManager.getAuthToken(context);
+        ongoingCreateRoutineCall = routineRemoteDataSource.createRoutine(authToken, request,
+                new RoutineRemoteDataSource.RemoteCallback() {
+                    @Override
+                    public void onSuccess() {
+                        ongoingCreateRoutineCall = null;
+                        callback.onSuccess();
+                    }
+
+                    @Override
+                    public void onError(@Nullable String errorMessage, @Nullable Throwable throwable) {
+                        ongoingCreateRoutineCall = null;
+                        String resolvedMessage = resolveCreateRoutineError(context, errorMessage, throwable);
+                        callback.onError(resolvedMessage);
+                    }
+                });
+    }
+
+    public void cancelRoutineCreation() {
+        if (ongoingCreateRoutineCall != null) {
+            ongoingCreateRoutineCall.cancel();
+            ongoingCreateRoutineCall = null;
+        }
+    }
+
     private List<Routine> filterDeletedRoutines(Context context, List<Routine> routines) {
         if (routines == null || routines.isEmpty()) {
             return Collections.emptyList();
@@ -114,5 +166,23 @@ public class RoutineRepository {
             }
         }
         return filteredRoutines;
+    }
+
+    private String resolveCreateRoutineError(Context context,
+                                             @Nullable String errorMessage,
+                                             @Nullable Throwable throwable) {
+        if (throwable instanceof IOException) {
+            return context.getString(R.string.trainer_routine_create_error_network);
+        }
+        if (!TextUtils.isEmpty(errorMessage)) {
+            return errorMessage;
+        }
+        return context.getString(R.string.trainer_routine_create_error_generic);
+    }
+
+    public interface CreateRoutineCallback {
+        void onSuccess();
+
+        void onError(@NonNull String errorMessage);
     }
 }
