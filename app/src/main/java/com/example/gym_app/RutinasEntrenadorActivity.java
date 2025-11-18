@@ -10,10 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.Nullable;
 
 import com.example.gym_app.adapter.TrainerRoutineAdapter;
 import com.example.gym_app.data.RoutineRepository;
@@ -38,6 +38,8 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
     private TextView emptyStateTextView;
     private ArrayList<String> studentRoutineIds = new ArrayList<>();
     private List<Routine> currentRoutines = new ArrayList<>();
+    @Nullable
+    private String studentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +71,7 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
 
         routinesRecyclerView.setAdapter(routineAdapter);
 
-        String studentId = getIntent().getStringExtra(EXTRA_STUDENT_ID);
+        studentId = getIntent().getStringExtra(EXTRA_STUDENT_ID);
         String studentName = getIntent().getStringExtra(EXTRA_STUDENT_NAME);
         ArrayList<String> routineIds = getIntent().getStringArrayListExtra(EXTRA_STUDENT_ROUTINE_IDS);
 
@@ -122,6 +124,9 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
             if (!TextUtils.isEmpty(routine.getDayOfWeek())) {
                 intent.putExtra(RutinaEntrenadorActivity.EXTRA_ROUTINE_DAY, routine.getDayOfWeek());
             }
+        }
+        if (!TextUtils.isEmpty(studentId)) {
+            intent.putExtra(RutinaEntrenadorActivity.EXTRA_STUDENT_ID, studentId);
         }
         startActivity(intent);
     }
