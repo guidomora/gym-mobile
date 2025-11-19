@@ -18,7 +18,6 @@ public class PerfilActivity extends AppCompatActivity {
         homeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Ahora navega a RutinasActivity, que es la nueva pantalla de inicio
                 startActivity(new Intent(PerfilActivity.this, RutinasActivity.class));
             }
         });

@@ -68,7 +68,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
         routineDaySpinner = findViewById(R.id.spinner_days);
         emptyStateTextView = findViewById(R.id.tv_empty_state);
         exercisesHeaderTextView = findViewById(R.id.tv_exercises_title);
-        progressBar = findViewById(R.id.progress_bar); // Agregar en layout
+        progressBar = findViewById(R.id.progress_bar);
         RecyclerView exercisesRecyclerView = findViewById(R.id.rv_exercises);
         Button addExerciseButton = findViewById(R.id.btn_add_exercise);
         saveButton = findViewById(R.id.btn_save);
@@ -88,7 +88,6 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
             saveButtonOriginalText = saveButton.getText();
         }
 
-        // Verificar si es modo edición
         String routineIdStr = intent != null ? intent.getStringExtra(EXTRA_ROUTINE_ID) : null;
         if (!TextUtils.isEmpty(routineIdStr)) {
             isEditMode = true;
@@ -96,11 +95,9 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
                 routineIdToEdit = Long.parseLong(routineIdStr);
                 loadRoutineFromApi(routineIdToEdit);
             } catch (NumberFormatException e) {
-                // Fallback a datos locales
                 bindRoutine(loadRoutineLocal());
             }
         } else {
-            // Modo crear nueva rutina
             bindRoutine(null);
         }
 
@@ -145,7 +142,6 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
                 Toast.makeText(RutinaEntrenadorActivity.this,
                         errorMessage,
                         Toast.LENGTH_SHORT).show();
-                // Fallback a datos locales
                 bindRoutine(loadRoutineLocal());
             }
         });
@@ -353,6 +349,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
                                 getString(R.string.trainer_routine_update_success, routineName),
                                 Toast.LENGTH_LONG).show();
                         finish();
+
                     }
 
                     @Override

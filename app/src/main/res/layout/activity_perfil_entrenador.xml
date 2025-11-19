@@ -217,11 +217,13 @@
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
+
     <Button
         android:id="@+id/btn_edit_profile"
         android:layout_width="159dp"
         android:layout_height="60dp"
 
+        android:layout_marginTop="16dp"
         android:background="@drawable/blue_button"
         android:drawableLeft="@drawable/edit_white"
         android:drawablePadding="12dp"
@@ -234,14 +236,16 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:backgroundTint="@null"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/group_birthdate"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/group_birthdate" />
+
     <Button
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
+        android:layout_marginTop="144dp"
+        android:layout_marginEnd="204dp"
         android:background="#FF2E22"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
@@ -250,9 +254,7 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:backgroundTint="@null"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/btn_edit_profile"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintTop_toBottomOf="@id/btn_edit_profile" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

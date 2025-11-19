@@ -114,25 +114,20 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
         profileButton.setOnClickListener(v ->
                 startActivity(new Intent(RutinasEntrenadorActivity.this, PerfilEntrenadorActivity.class)));
 
-        // Cargar rutinas desde API
         loadRoutinesFromApi();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Solo recarga si no estamos esperando resultado de otra activity
-        // para evitar doble carga
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Si volvemos de crear o editar rutina con éxito, recargar la lista
         if ((requestCode == REQUEST_CODE_CREATE_ROUTINE || requestCode == REQUEST_CODE_EDIT_ROUTINE)
                 && resultCode == RESULT_OK) {
-            // Recargar rutinas desde la API
             loadRoutinesFromApi();
         }
     }
@@ -145,8 +140,6 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
             public void onSuccess(List<Routine> routines) {
                 showLoading(false);
 
-                // Si hay studentId, filtrar solo las rutinas del estudiante
-                // Por ahora mostramos todas, pero puedes filtrar si es necesario
                 currentRoutines = new ArrayList<>(routines);
                 routineAdapter.submitList(new ArrayList<>(currentRoutines));
                 updateEmptyState(currentRoutines.isEmpty());
@@ -158,7 +151,6 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
                 Toast.makeText(RutinasEntrenadorActivity.this,
                         errorMessage,
                         Toast.LENGTH_SHORT).show();
-                // Fallback a datos locales
                 loadLocalRoutines();
             }
         });
@@ -223,7 +215,6 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
             return;
         }
 
-        // Intentar parsear el ID a Long
         Long routineId;
         try {
             routineId = Long.parseLong(routine.getId());
@@ -234,13 +225,11 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
 
         showLoading(true);
 
-        // Llamar a la API para eliminar
         routineRepository.deleteRoutine(this, routineId, new RoutineRepository.DeleteRoutineCallback() {
             @Override
             public void onSuccess() {
                 showLoading(false);
 
-                // Actualizar lista local
                 List<Routine> updatedRoutines = new ArrayList<>();
                 for (Routine currentRoutine : currentRoutines) {
                     if (currentRoutine == null || TextUtils.isEmpty(currentRoutine.getId())) {

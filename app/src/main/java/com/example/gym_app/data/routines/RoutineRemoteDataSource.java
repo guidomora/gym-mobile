@@ -21,7 +21,6 @@ public class RoutineRemoteDataSource {
         this.apiService = apiService;
     }
 
-    // CREAR RUTINA
     public Call<RoutineResponse> createRoutine(@Nullable String authToken,
                                                CreateRoutineRequest request,
                                                final CreateRoutineCallback callback) {
@@ -48,7 +47,6 @@ public class RoutineRemoteDataSource {
         return call;
     }
 
-    // OBTENER RUTINA POR ID
     public Call<RoutineResponse> getRoutineById(@Nullable String authToken,
                                                 Long id,
                                                 final GetRoutineCallback callback) {
@@ -100,7 +98,6 @@ public class RoutineRemoteDataSource {
         return call;
     }
 
-    // OBTENER TODAS LAS RUTINAS
     public Call<List<RoutineResponse>> getAllRoutines(@Nullable String authToken,
                                                       final GetAllRoutinesCallback callback) {
         String authHeader = buildAuthHeader(authToken);
@@ -126,7 +123,6 @@ public class RoutineRemoteDataSource {
         return call;
     }
 
-    // ACTUALIZAR RUTINA
     public Call<RoutineResponse> updateRoutine(@Nullable String authToken,
                                                Long id,
                                                UpdateRoutineRequest request,
@@ -154,7 +150,6 @@ public class RoutineRemoteDataSource {
         return call;
     }
 
-    // ELIMINAR RUTINA
     public Call<Void> deleteRoutine(@Nullable String authToken,
                                     Long id,
                                     final DeleteRoutineCallback callback) {
@@ -220,7 +215,6 @@ public class RoutineRemoteDataSource {
         }
     }
 
-    // CALLBACKS
     public interface CreateRoutineCallback {
         void onSuccess(RoutineResponse routine);
         void onError(@Nullable String errorMessage, @Nullable Throwable throwable);

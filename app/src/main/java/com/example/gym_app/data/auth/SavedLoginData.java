@@ -9,13 +9,20 @@ public class SavedLoginData {
     private final String authToken;
     private final boolean rememberMe;
     private final String role;
+    private final String gymName;
 
-    SavedLoginData(String email, String displayName, String authToken, boolean rememberMe, String role) {
+    SavedLoginData(String email, String displayName, String authToken, boolean rememberMe, String role, String gymName) {
         this.email = email;
         this.displayName = displayName;
         this.authToken = authToken;
         this.rememberMe = rememberMe;
         this.role = role;
+        this.gymName = gymName;
+    }
+
+    // Overloaded constructor for compatibility
+    SavedLoginData(String email, String displayName, String authToken, boolean rememberMe, String role) {
+        this(email, displayName, authToken, rememberMe, role, null);
     }
 
     public String getEmail() {
@@ -42,5 +49,9 @@ public class SavedLoginData {
     }
     public String getRole() {
         return role;
+    }
+
+    public String getGymName() {
+        return gymName;
     }
 }

@@ -141,12 +141,12 @@
                     android:id="@+id/btn_add_exercise"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/add_button"
+                    android:background="@drawable/blue_button"
                     android:text="Ejercicio +"
-                    app:backgroundTint="@null"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    app:backgroundTint="@null" />
 
                 <Space
                     android:layout_width="0dp"
@@ -157,7 +157,7 @@
                     android:id="@+id/btn_save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ver_button"
+                    android:background="@drawable/add_button"
                     android:paddingStart="32dp"
                     android:paddingEnd="32dp"
                     android:text="Guardar"
