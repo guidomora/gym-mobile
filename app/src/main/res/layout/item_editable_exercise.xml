@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:background="@drawable/exercise_card"
+    android:elevation="6dp"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:text="Nombre del ejercicio"
+            android:textColor="@color/login_primary_text"
+            android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/btn_delete_exercise"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/trainer_delete_routine_content_description"
+            android:padding="0dp"
+            app:srcCompat="@drawable/trash" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_exercise_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_field"
+        android:hint="Curl con barra Z"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/login_primary_text"
+        android:textColorHint="@color/login_hint_text"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Series"
+        android:textColor="@color/login_primary_text"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/et_series"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_field"
+        android:hint="3"
+        android:inputType="number"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/login_primary_text"
+        android:textColorHint="@color/login_hint_text"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Repeticiones"
+        android:textColor="@color/login_primary_text"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/et_repetitions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_field"
+        android:hint="8 a 12"
+        android:inputType="text"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/login_primary_text"
+        android:textColorHint="@color/login_hint_text"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Descansos"
+        android:textColor="@color/login_primary_text"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/et_rest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_field"
+        android:hint="60 - 90 segundos"
+        android:inputType="text"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/login_primary_text"
+        android:textColorHint="@color/login_hint_text"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Peso sugerido"
+        android:textColor="@color/login_primary_text"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/et_weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_field"
+        android:hint="moderado-alto"
+        android:inputType="text"
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/login_primary_text"
+        android:textColorHint="@color/login_hint_text"
+        android:textSize="15sp" />
+
+</LinearLayout>

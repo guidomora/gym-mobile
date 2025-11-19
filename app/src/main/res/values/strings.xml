@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name">Gym_app</string>
+    <string name="registro">Registro</string>
+    <string name="registro_username_hint">Usuario *</string>
+    <string name="registro_phone_hint">Telefono</string>
+    <string name="registro_email_hint">Email *</string>
+    <string name="registro_birthdate_hint">Fecha  de nacimiento</string>
+    <string name="registro_password_hint">Contraseña</string>
+    <string name="registro_confirm_password_hint">Reingresar Contraseña</string>
+    <string name="registro_select_gym_label">Seleccionar gimnasio</string>
+    <string name="registro_select_role_label">Tipo de cuenta</string>
+    <string name="registro_cta">Registrarse</string>
+    <string name="error_username_required">Debes ingresar un usuario.</string>
+    <string name="error_email_required">Debes ingresar un correo electrónico.</string>
+    <string name="error_password_required">Debes ingresar una contraseña.</string>
+    <string name="error_password_length">La contraseña debe tener al menos 6 caracteres.</string>
+    <string name="error_phone_invalid">Ingresa un número de teléfono válido.</string>
+    <string name="error_email_invalid">Ingresa un correo electrónico válido.</string>
+    <string name="error_birthdate_required">Selecciona tu fecha de nacimiento.</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden.</string>
+    <string name="error_gym_required">Selecciona un gimnasio antes de continuar.</string>
+    <string name="login_form_ready_message">Hola %1$s, los datos del login están listos para enviarse.</string>
+    <string name="login_success_message">¡Bienvenido, %1$s!</string>
+    <string name="login_error_unknown">No se pudo completar la solicitud. Intenta nuevamente.</string>
+    <string name="login_error_network">No se pudo conectar con el servidor. Verifica tu conexión e inténtalo nuevamente.</string>
+    <string name="login_loading_label">Ingresando…</string>
+    <string name="register_loading_label">Registrando…</string>
+    <string name="register_success_message">¡Registro completado, %1$s!</string>
+    <string name="register_error_unknown">No se pudo completar el registro. Intenta nuevamente.</string>
+    <string name="error_role_required">Selecciona un tipo de cuenta.</string>
+    <string name="error_birthdate_format">Selecciona una fecha válida.</string>
+    <string name="register_role_student">Alumno</string>
+    <string name="register_role_trainer">Entrenador</string>
+    <string name="register_form_ready_message">%1$s, tu registro está listo para enviarse.</string>
+    <string name="perfil">Perfil</string>
+    <string-array name="user_role_options">
+        <item>Usuario</item>
+        <item>Entrenador</item>
+    </string-array>
+    <string-array name="routine_days">
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miércoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+    </string-array>
+    <string name="routine_meta_format">%1$d min · %2$s</string>
+    <string name="routine_meta_only_duration">%1$d min</string>
+    <string name="routine_empty_exercises">No hay ejercicios cargados aún.</string>
+    <string name="trainer_students_title">Alumnos</string>
+    <string name="trainer_student_label">Alumno: %1$s</string>
+    <string name="trainer_student_placeholder">Alumno sin nombre</string>
+    <string name="trainer_routines_title">Rutinas</string>
+    <string name="trainer_add_routine_cta">Rutina +</string>
+    <string name="trainer_no_routines_assigned">Este alumno aún no tiene rutinas asignadas.</string>
+    <string name="trainer_back_content_description">Volver</string>
+    <string name="trainer_home_content_description">Inicio</string>
+    <string name="trainer_home_label">Inicio</string>
+    <string name="trainer_profile_content_description">Perfil</string>
+    <string name="trainer_profile_label">Perfil</string>
+    <string name="trainer_edit_routine_content_description">Editar rutina</string>
+    <string name="trainer_delete_routine_content_description">Eliminar rutina</string>
+    <string name="trainer_routine_placeholder">Rutina sin nombre</string>
+    <string name="trainer_exercises_header_placeholder">Ejercicios</string>
+    <plurals name="trainer_exercises_header">
+        <item quantity="one">Ejercicio (%d)</item>
+        <item quantity="other">Ejercicios (%d)</item>
+    </plurals>
+    <string name="trainer_routine_saved_message">Rutina &quot;%1$s&quot; guardada con %2$d ejercicios (cambios temporales).</string>
+    <string name="trainer_routine_deleted_message">Rutina &quot;%1$s&quot; eliminada (cambios temporales).</string>
+    <string name="trainer_routine_delete_error">No se pudo eliminar la rutina. Intenta nuevamente.</string>
+    <string name="trainer_routine_create_success">Rutina &quot;%1$s&quot; creada correctamente.</string>
+    <string name="trainer_routine_create_error_generic">No se pudo crear la rutina. Intenta nuevamente.</string>
+    <string name="trainer_routine_create_error_network">No se pudo conectar con el servidor para crear la rutina.</string>
+    <string name="trainer_routine_create_error_missing_student">No se pudo identificar al alumno para esta rutina.</string>
+    <string name="trainer_routine_create_error_invalid_name">Ingresa un nombre para la rutina.</string>
+    <string name="trainer_routine_saving">Guardando…</string>
+    <string-array name="register_role_options">
+        <item>@string/register_role_student</item>
+        <item>@string/register_role_trainer</item>
+    </string-array>
+</resources>
