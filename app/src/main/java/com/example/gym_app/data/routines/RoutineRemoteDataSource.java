@@ -11,11 +11,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-class RoutineRemoteDataSource {
+public class RoutineRemoteDataSource {
 
     private final RoutineApiService apiService;
 
-    RoutineRemoteDataSource() {
+    public RoutineRemoteDataSource() {
         this(RoutineServiceFactory.createService());
     }
 
@@ -23,9 +23,9 @@ class RoutineRemoteDataSource {
         this.apiService = apiService;
     }
 
-    Call<Void> createRoutine(@Nullable String authToken,
-                             CreateRoutineRequest request,
-                             final RemoteCallback callback) {
+    public Call<Void> createRoutine(@Nullable String authToken,
+                                    CreateRoutineRequest request,
+                                    final RemoteCallback callback) {
         String authHeader = null;
         if (!TextUtils.isEmpty(authToken)) {
             authHeader = "Bearer " + authToken;
@@ -84,7 +84,7 @@ class RoutineRemoteDataSource {
         }
     }
 
-    interface RemoteCallback {
+    public interface RemoteCallback {
         void onSuccess();
 
         void onError(@Nullable String errorMessage, @Nullable Throwable throwable);

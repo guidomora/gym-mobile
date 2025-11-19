@@ -11,18 +11,17 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-class RoutineServiceFactory {
+public class RoutineServiceFactory {
 
     private static final long DEFAULT_TIMEOUT_SECONDS = 30L;
 
     private static Retrofit retrofit;
 
     private RoutineServiceFactory() {
-        // No instances.
     }
 
     @NonNull
-    static synchronized RoutineApiService createService() {
+    public static synchronized RoutineApiService createService() {
         if (retrofit == null) {
             retrofit = buildRetrofit();
         }
@@ -47,6 +46,7 @@ class RoutineServiceFactory {
                 .writeTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+
         loggingInterceptor.setLevel(BuildConfig.DEBUG
                 ? HttpLoggingInterceptor.Level.BODY
                 : HttpLoggingInterceptor.Level.NONE);

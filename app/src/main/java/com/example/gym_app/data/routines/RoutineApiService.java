@@ -7,7 +7,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
-interface RoutineApiService {
+public interface RoutineApiService {
 
     @POST("api/routines")
     Call<Void> createRoutine(@Nullable @Header("Authorization") String authHeader,

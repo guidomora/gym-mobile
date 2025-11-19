@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider; // Necesario para MVVM
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +24,7 @@ import com.example.gym_app.data.routines.CreateRoutineRequest;
 import com.example.gym_app.model.EditableExercise;
 import com.example.gym_app.model.Exercise;
 import com.example.gym_app.model.Routine;
+import com.example.gym_app.viewmodel.CreateRoutineViewModel; // Tu nuevo ViewModel
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,7 +38,8 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     public static final String EXTRA_ROUTINE_NAME = "extra_trainer_routine_name";
     public static final String EXTRA_ROUTINE_DAY = "extra_trainer_routine_day";
     public static final String EXTRA_STUDENT_ID = "extra_trainer_student_id";
-    private final RoutineRepository routineRepository = new RoutineRepository();
+
+    private CreateRoutineViewModel viewModel;
 
     private EditableExerciseAdapter exerciseAdapter;
     private EditText routineNameEditText;
@@ -45,7 +48,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     private TextView exercisesHeaderTextView;
     private Button saveButton;
     private CharSequence saveButtonOriginalText;
-    private boolean isSavingRoutine;
+
     @Nullable
     private String studentId;
 
@@ -53,6 +56,8 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rutina_entrenador);
+
+        viewModel = new ViewModelProvider(this).get(CreateRoutineViewModel.class);
 
         routineNameEditText = findViewById(R.id.et_routine_name);
         routineDaySpinner = findViewById(R.id.spinner_days);
@@ -76,6 +81,8 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
             saveButtonOriginalText = saveButton.getText();
         }
 
+        setupViewModelObservers();
+
         bindRoutine(loadRoutine());
 
         addExerciseButton.setOnClickListener(v -> {
@@ -84,16 +91,36 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(v -> attemptRoutineCreation());
 
-        homeButton.setOnClickListener(v ->
-                startActivity(new Intent(RutinaEntrenadorActivity.this, InicioEntrenadorActivity.class)));
+        homeButton.setOnClickListener(v -> {
+            Intent homeIntent = new Intent(RutinaEntrenadorActivity.this, InicioEntrenadorActivity.class);
+            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(homeIntent);
+        });
 
         profileButton.setOnClickListener(v ->
                 startActivity(new Intent(RutinaEntrenadorActivity.this, PerfilEntrenadorActivity.class)));
     }
 
+    private void setupViewModelObservers() {
+        viewModel.getIsSaving().observe(this, isSaving -> {
+            setSavingState(isSaving);
+        });
+
+        viewModel.getSuccessMessage().observe(this, message -> {
+            String routineName = routineNameEditText.getText().toString();
+            if (TextUtils.isEmpty(routineName)) routineName = getString(R.string.trainer_routine_placeholder);
+
+            Toast.makeText(this, getString(R.string.trainer_routine_create_success, routineName), Toast.LENGTH_LONG).show();
+            finish();
+        });
+
+        viewModel.getErrorMessage().observe(this, error -> {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        });
+    }
+
     @Override
     protected void onDestroy() {
-        routineRepository.cancelRoutineCreation();
         super.onDestroy();
     }
 
@@ -129,7 +156,8 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(routineId)) {
             return null;
         }
-        return routineRepository.getRoutineById(this, routineId);
+
+        return new RoutineRepository().getRoutineById(this, routineId);
     }
 
     private List<Long> buildExerciseIds() {
@@ -188,9 +216,10 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     }
 
     private void attemptRoutineCreation() {
-        if (isSavingRoutine) {
+        if (Boolean.TRUE.equals(viewModel.getIsSaving().getValue())) {
             return;
         }
+
         String resolvedStudentId = studentId;
         if (TextUtils.isEmpty(resolvedStudentId)) {
             Toast.makeText(this,
@@ -215,6 +244,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
             return;
         }
         List<Long> exerciseIds = buildExerciseIds();
+
         CreateRoutineRequest request = new CreateRoutineRequest(
                 routineName,
                 selectedDay,
@@ -222,33 +252,11 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
                 resolvedStudentId,
                 exerciseIds
         );
-        setSavingState(true);
-        routineRepository.createRoutine(this, request, new RoutineRepository.CreateRoutineCallback() {
-            @Override
-            public void onSuccess() {
-                setSavingState(false);
-                String displayName = routineName;
-                if (TextUtils.isEmpty(displayName)) {
-                    displayName = getString(R.string.trainer_routine_placeholder);
-                }
-                Toast.makeText(RutinaEntrenadorActivity.this,
-                        getString(R.string.trainer_routine_create_success, displayName),
-                        Toast.LENGTH_LONG).show();
-                finish();
-            }
 
-            @Override
-            public void onError(@NonNull String errorMessage) {
-                setSavingState(false);
-                Toast.makeText(RutinaEntrenadorActivity.this,
-                        errorMessage,
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+        viewModel.createRoutine(this, request);
     }
 
     private void setSavingState(boolean saving) {
-        isSavingRoutine = saving;
         if (saveButton == null) {
             return;
         }
