@@ -64,7 +64,21 @@
             android:clipToPadding="false"
             android:paddingBottom="12dp"
             tools:itemCount="4"
-            tools:listitem="@layout/item_routine_card"/>
+            tools:listitem="@layout/item_routine_card" />
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_empty_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/no_routines_available"
+            android:visibility="gone" />
     </LinearLayout>
 
 

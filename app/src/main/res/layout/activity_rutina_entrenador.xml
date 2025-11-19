@@ -129,34 +129,51 @@
                 android:nestedScrollingEnabled="false"
                 android:overScrollMode="never" />
 
-
-            <Button
-                android:id="@+id/btn_add_exercise"
-                android:layout_width="wrap_content"
+            <!-- Botones alineados horizontalmente -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
                 android:layout_marginTop="24dp"
-                android:background="@drawable/add_button"
-                android:text="Ejercicio +"
-                app:backgroundTint="@null"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_save"
+                <Button
+                    android:id="@+id/btn_add_exercise"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/add_button"
+                    android:text="Ejercicio +"
+                    app:backgroundTint="@null"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/btn_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ver_button"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="Guardar"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:backgroundTint="@null" />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/ver_button"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp"
-                app:backgroundTint="@null"
-                android:text="Guardar"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

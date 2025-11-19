@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,8 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gym_app.adapter.EditableExerciseAdapter;
-import com.example.gym_app.data.RoutineRepository;
 import com.example.gym_app.data.routines.CreateRoutineRequest;
+import com.example.gym_app.data.RoutineRepository;
+import com.example.gym_app.data.routines.UpdateRoutineRequest;
 import com.example.gym_app.model.EditableExercise;
 import com.example.gym_app.model.Exercise;
 import com.example.gym_app.model.Routine;
@@ -27,8 +29,10 @@ import com.example.gym_app.model.Routine;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class RutinaEntrenadorActivity extends AppCompatActivity {
 
@@ -36,6 +40,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     public static final String EXTRA_ROUTINE_NAME = "extra_trainer_routine_name";
     public static final String EXTRA_ROUTINE_DAY = "extra_trainer_routine_day";
     public static final String EXTRA_STUDENT_ID = "extra_trainer_student_id";
+
     private final RoutineRepository routineRepository = new RoutineRepository();
 
     private EditableExerciseAdapter exerciseAdapter;
@@ -44,10 +49,15 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     private TextView emptyStateTextView;
     private TextView exercisesHeaderTextView;
     private Button saveButton;
+    private ProgressBar progressBar;
     private CharSequence saveButtonOriginalText;
     private boolean isSavingRoutine;
+    private boolean isEditMode = false;
+
     @Nullable
     private String studentId;
+    @Nullable
+    private Long routineIdToEdit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +68,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
         routineDaySpinner = findViewById(R.id.spinner_days);
         emptyStateTextView = findViewById(R.id.tv_empty_state);
         exercisesHeaderTextView = findViewById(R.id.tv_exercises_title);
+        progressBar = findViewById(R.id.progress_bar); // Agregar en layout
         RecyclerView exercisesRecyclerView = findViewById(R.id.rv_exercises);
         Button addExerciseButton = findViewById(R.id.btn_add_exercise);
         saveButton = findViewById(R.id.btn_save);
@@ -72,17 +83,38 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         studentId = resolveStudentId(intent);
+
         if (saveButton != null) {
             saveButtonOriginalText = saveButton.getText();
         }
 
-        bindRoutine(loadRoutine());
+        // Verificar si es modo edición
+        String routineIdStr = intent != null ? intent.getStringExtra(EXTRA_ROUTINE_ID) : null;
+        if (!TextUtils.isEmpty(routineIdStr)) {
+            isEditMode = true;
+            try {
+                routineIdToEdit = Long.parseLong(routineIdStr);
+                loadRoutineFromApi(routineIdToEdit);
+            } catch (NumberFormatException e) {
+                // Fallback a datos locales
+                bindRoutine(loadRoutineLocal());
+            }
+        } else {
+            // Modo crear nueva rutina
+            bindRoutine(null);
+        }
 
         addExerciseButton.setOnClickListener(v -> {
             exerciseAdapter.addExercise(new EditableExercise());
         });
 
-        saveButton.setOnClickListener(v -> attemptRoutineCreation());
+        saveButton.setOnClickListener(v -> {
+            if (isEditMode && routineIdToEdit != null) {
+                attemptRoutineUpdate();
+            } else {
+                attemptRoutineCreation();
+            }
+        });
 
         homeButton.setOnClickListener(v ->
                 startActivity(new Intent(RutinaEntrenadorActivity.this, InicioEntrenadorActivity.class)));
@@ -95,6 +127,28 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     protected void onDestroy() {
         routineRepository.cancelRoutineCreation();
         super.onDestroy();
+    }
+
+    private void loadRoutineFromApi(Long routineId) {
+        showLoading(true);
+
+        routineRepository.getRoutineById(this, routineId, new RoutineRepository.GetRoutineCallback() {
+            @Override
+            public void onSuccess(Routine routine) {
+                showLoading(false);
+                bindRoutine(routine);
+            }
+
+            @Override
+            public void onError(@NonNull String errorMessage) {
+                showLoading(false);
+                Toast.makeText(RutinaEntrenadorActivity.this,
+                        errorMessage,
+                        Toast.LENGTH_SHORT).show();
+                // Fallback a datos locales
+                bindRoutine(loadRoutineLocal());
+            }
+        });
     }
 
     private void bindRoutine(@Nullable Routine routine) {
@@ -120,7 +174,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     }
 
     @Nullable
-    private Routine loadRoutine() {
+    private Routine loadRoutineLocal() {
         Intent intent = getIntent();
         if (intent == null) {
             return null;
@@ -146,6 +200,10 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
             exerciseIds.add(computedId);
         }
         return exerciseIds;
+    }
+
+    private Set<Long> buildExerciseIdsSet() {
+        return new HashSet<>(buildExerciseIds());
     }
 
     private List<EditableExercise> mapExercises(@Nullable List<Exercise> exercises) {
@@ -191,6 +249,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
         if (isSavingRoutine) {
             return;
         }
+
         String resolvedStudentId = studentId;
         if (TextUtils.isEmpty(resolvedStudentId)) {
             Toast.makeText(this,
@@ -198,6 +257,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             return;
         }
+
         String routineName = routineNameEditText.getText() == null
                 ? "" : routineNameEditText.getText().toString().trim();
         if (TextUtils.isEmpty(routineName)) {
@@ -207,6 +267,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
             routineNameEditText.requestFocus();
             return;
         }
+
         String selectedDay = resolveSelectedDay();
         if (TextUtils.isEmpty(selectedDay)) {
             Toast.makeText(this,
@@ -214,14 +275,16 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        List<Long> exerciseIds = buildExerciseIds();
+
+        Set<Long> exerciseIds = buildExerciseIdsSet();
         CreateRoutineRequest request = new CreateRoutineRequest(
                 routineName,
                 selectedDay,
                 buildCurrentDate(),
-                resolvedStudentId,
+                Long.parseLong(studentId),
                 exerciseIds
         );
+
         setSavingState(true);
         routineRepository.createRoutine(this, request, new RoutineRepository.CreateRoutineCallback() {
             @Override
@@ -245,6 +308,70 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void attemptRoutineUpdate() {
+        if (isSavingRoutine || routineIdToEdit == null) {
+            return;
+        }
+
+        String routineName = routineNameEditText.getText() == null
+                ? "" : routineNameEditText.getText().toString().trim();
+        if (TextUtils.isEmpty(routineName)) {
+            Toast.makeText(this,
+                    R.string.trainer_routine_create_error_invalid_name,
+                    Toast.LENGTH_SHORT).show();
+            routineNameEditText.requestFocus();
+            return;
+        }
+
+        String selectedDay = resolveSelectedDay();
+        if (TextUtils.isEmpty(selectedDay)) {
+            Toast.makeText(this,
+                    R.string.trainer_routine_create_error_generic,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        UpdateRoutineRequest request = new UpdateRoutineRequest();
+        request.setName(routineName);
+        request.setDayOfWeek(selectedDay);
+        request.setDate(buildCurrentDate());
+        request.setExerciseIds(buildExerciseIdsSet());
+
+        if (!TextUtils.isEmpty(studentId)) {
+            request.setStudentId(Long.parseLong(studentId));
+        }
+
+        setSavingState(true);
+        routineRepository.updateRoutine(this, routineIdToEdit, request,
+                new RoutineRepository.UpdateRoutineCallback() {
+                    @Override
+                    public void onSuccess() {
+                        setSavingState(false);
+                        Toast.makeText(RutinaEntrenadorActivity.this,
+                                getString(R.string.trainer_routine_update_success, routineName),
+                                Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(@NonNull String errorMessage) {
+                        setSavingState(false);
+                        Toast.makeText(RutinaEntrenadorActivity.this,
+                                errorMessage,
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void showLoading(boolean show) {
+        if (progressBar != null) {
+            progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+        if (saveButton != null) {
+            saveButton.setEnabled(!show);
+        }
     }
 
     private void setSavingState(boolean saving) {

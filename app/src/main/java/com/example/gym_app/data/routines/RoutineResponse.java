@@ -4,17 +4,18 @@ import com.google.gson.annotations.SerializedName;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Set;
+public class RoutineResponse {
+    @SerializedName("id")
+    private Long id;
 
-// Request para crear rutina
-public class CreateRoutineRequest {
     @SerializedName("name")
     private String name;
 
     @SerializedName("dayOfWeek")
-    private String dayOfWeek; // "MONDAY", "TUESDAY", etc.
+    private String dayOfWeek;
 
     @SerializedName("date")
-    private String date; // Formato: "2025-11-18"
+    private String date;
 
     @SerializedName("studentId")
     private Long studentId;
@@ -22,27 +23,19 @@ public class CreateRoutineRequest {
     @SerializedName("exerciseIds")
     private Set<Long> exerciseIds;
 
-    public CreateRoutineRequest(String name, String dayOfWeek, String date, Long studentId, Set<Long> exerciseIds) {
-        this.name = name;
-        this.dayOfWeek = dayOfWeek;
-        this.date = date;
-        this.studentId = studentId;
-        this.exerciseIds = exerciseIds;
-    }
-
-    // Getters y Setters
+    // Getters
+    public Long getId() { return id; }
     public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
     public String getDayOfWeek() { return dayOfWeek; }
-    public void setDayOfWeek(String dayOfWeek) { this.dayOfWeek = dayOfWeek; }
-
     public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
-
     public Long getStudentId() { return studentId; }
-    public void setStudentId(Long studentId) { this.studentId = studentId; }
-
     public Set<Long> getExerciseIds() { return exerciseIds; }
+
+    // Setters
+    public void setId(Long id) { this.id = id; }
+    public void setName(String name) { this.name = name; }
+    public void setDayOfWeek(String dayOfWeek) { this.dayOfWeek = dayOfWeek; }
+    public void setDate(String date) { this.date = date; }
+    public void setStudentId(Long studentId) { this.studentId = studentId; }
     public void setExerciseIds(Set<Long> exerciseIds) { this.exerciseIds = exerciseIds; }
 }

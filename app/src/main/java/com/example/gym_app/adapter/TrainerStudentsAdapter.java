@@ -30,6 +30,14 @@ public class TrainerStudentsAdapter extends RecyclerView.Adapter<TrainerStudents
         this.listener = listener;
     }
 
+    public void setStudents(List<TrainerStudent> newStudents) {
+        this.students.clear(); // Borramos la lista vieja
+        if (newStudents != null) {
+            this.students.addAll(newStudents); // Agregamos los nuevos datos
+        }
+        notifyDataSetChanged(); // ¡Ahora sí la vista se actualiza!
+    }
+
     @NonNull
     @Override
     public StudentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

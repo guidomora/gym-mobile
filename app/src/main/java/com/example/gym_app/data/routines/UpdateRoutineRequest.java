@@ -1,20 +1,19 @@
 package com.example.gym_app.data.routines;
 
 import com.google.gson.annotations.SerializedName;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+
 import java.util.Set;
 
 // Request para crear rutina
-public class CreateRoutineRequest {
+public class UpdateRoutineRequest {
     @SerializedName("name")
     private String name;
 
     @SerializedName("dayOfWeek")
-    private String dayOfWeek; // "MONDAY", "TUESDAY", etc.
+    private String dayOfWeek;
 
     @SerializedName("date")
-    private String date; // Formato: "2025-11-18"
+    private String date;
 
     @SerializedName("studentId")
     private Long studentId;
@@ -22,13 +21,7 @@ public class CreateRoutineRequest {
     @SerializedName("exerciseIds")
     private Set<Long> exerciseIds;
 
-    public CreateRoutineRequest(String name, String dayOfWeek, String date, Long studentId, Set<Long> exerciseIds) {
-        this.name = name;
-        this.dayOfWeek = dayOfWeek;
-        this.date = date;
-        this.studentId = studentId;
-        this.exerciseIds = exerciseIds;
-    }
+    public UpdateRoutineRequest() {}
 
     // Getters y Setters
     public String getName() { return name; }

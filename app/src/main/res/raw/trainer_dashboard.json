@@ -5,7 +5,7 @@
   },
   "students": [
     {
-      "id": "student-001",
+      "id": "1",
       "fullName": "John Doe",
       "routineIds": [
         "routine_pecho",

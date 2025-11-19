@@ -79,4 +79,7 @@
         <item>@string/register_role_student</item>
         <item>@string/register_role_trainer</item>
     </string-array>
+    <string name="no_routines_available">No hay rutinas disponibles</string>
+    <string name="trainer_routine_update_success">Rutina "%s" actualizada exitosamente</string>
+    <string name="routine_not_found">Rutina no encontrada</string>
 </resources>

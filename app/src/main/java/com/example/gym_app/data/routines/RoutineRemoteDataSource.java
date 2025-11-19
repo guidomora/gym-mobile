@@ -1,21 +1,19 @@
 package com.example.gym_app.data.routines;
 
 import android.text.TextUtils;
-
 import androidx.annotation.Nullable;
-
 import org.json.JSONObject;
-
+import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-class RoutineRemoteDataSource {
+public class RoutineRemoteDataSource {
 
     private final RoutineApiService apiService;
 
-    RoutineRemoteDataSource() {
+    public RoutineRemoteDataSource() {
         this(RoutineServiceFactory.createService());
     }
 
@@ -23,14 +21,145 @@ class RoutineRemoteDataSource {
         this.apiService = apiService;
     }
 
-    Call<Void> createRoutine(@Nullable String authToken,
-                             CreateRoutineRequest request,
-                             final RemoteCallback callback) {
-        String authHeader = null;
-        if (!TextUtils.isEmpty(authToken)) {
-            authHeader = "Bearer " + authToken;
-        }
-        Call<Void> call = apiService.createRoutine(authHeader, request);
+    // CREAR RUTINA
+    public Call<RoutineResponse> createRoutine(@Nullable String authToken,
+                                               CreateRoutineRequest request,
+                                               final CreateRoutineCallback callback) {
+        String authHeader = buildAuthHeader(authToken);
+        Call<RoutineResponse> call = apiService.createRoutine(authHeader, request);
+        call.enqueue(new Callback<RoutineResponse>() {
+            @Override
+            public void onResponse(Call<RoutineResponse> call, Response<RoutineResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                    return;
+                }
+                callback.onError(extractErrorMessage(response), null);
+            }
+
+            @Override
+            public void onFailure(Call<RoutineResponse> call, Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+                callback.onError(null, t);
+            }
+        });
+        return call;
+    }
+
+    // OBTENER RUTINA POR ID
+    public Call<RoutineResponse> getRoutineById(@Nullable String authToken,
+                                                Long id,
+                                                final GetRoutineCallback callback) {
+        String authHeader = buildAuthHeader(authToken);
+        Call<RoutineResponse> call = apiService.getRoutineById(authHeader, id);
+        call.enqueue(new Callback<RoutineResponse>() {
+            @Override
+            public void onResponse(Call<RoutineResponse> call, Response<RoutineResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                    return;
+                }
+                callback.onError(extractErrorMessage(response), null);
+            }
+
+            @Override
+            public void onFailure(Call<RoutineResponse> call, Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+                callback.onError(null, t);
+            }
+        });
+        return call;
+    }
+
+    public Call<List<RoutineResponse>> getRoutinesByUserId(@Nullable String authToken, Long userId,
+                                                      final GetAllRoutinesCallback callback) {
+        String authHeader = buildAuthHeader(authToken);
+        Call<List<RoutineResponse>> call = apiService.getRoutinesByUserId(authHeader, userId);
+        call.enqueue(new Callback<List<RoutineResponse>>() {
+            @Override
+            public void onResponse(Call<List<RoutineResponse>> call, Response<List<RoutineResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                    return;
+                }
+                callback.onError(extractErrorMessage(response), null);
+            }
+
+            @Override
+            public void onFailure(Call<List<RoutineResponse>> call, Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+                callback.onError(null, t);
+            }
+        });
+        return call;
+    }
+
+    // OBTENER TODAS LAS RUTINAS
+    public Call<List<RoutineResponse>> getAllRoutines(@Nullable String authToken,
+                                                      final GetAllRoutinesCallback callback) {
+        String authHeader = buildAuthHeader(authToken);
+        Call<List<RoutineResponse>> call = apiService.getAllRoutines(authHeader);
+        call.enqueue(new Callback<List<RoutineResponse>>() {
+            @Override
+            public void onResponse(Call<List<RoutineResponse>> call, Response<List<RoutineResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                    return;
+                }
+                callback.onError(extractErrorMessage(response), null);
+            }
+
+            @Override
+            public void onFailure(Call<List<RoutineResponse>> call, Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+                callback.onError(null, t);
+            }
+        });
+        return call;
+    }
+
+    // ACTUALIZAR RUTINA
+    public Call<RoutineResponse> updateRoutine(@Nullable String authToken,
+                                               Long id,
+                                               UpdateRoutineRequest request,
+                                               final UpdateRoutineCallback callback) {
+        String authHeader = buildAuthHeader(authToken);
+        Call<RoutineResponse> call = apiService.updateRoutine(authHeader, id, request);
+        call.enqueue(new Callback<RoutineResponse>() {
+            @Override
+            public void onResponse(Call<RoutineResponse> call, Response<RoutineResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                    return;
+                }
+                callback.onError(extractErrorMessage(response), null);
+            }
+
+            @Override
+            public void onFailure(Call<RoutineResponse> call, Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+                callback.onError(null, t);
+            }
+        });
+        return call;
+    }
+
+    // ELIMINAR RUTINA
+    public Call<Void> deleteRoutine(@Nullable String authToken,
+                                    Long id,
+                                    final DeleteRoutineCallback callback) {
+        String authHeader = buildAuthHeader(authToken);
+        Call<Void> call = apiService.deleteRoutine(authHeader, id);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -50,6 +179,14 @@ class RoutineRemoteDataSource {
             }
         });
         return call;
+    }
+
+    @Nullable
+    private String buildAuthHeader(@Nullable String authToken) {
+        if (TextUtils.isEmpty(authToken)) {
+            return null;
+        }
+        return "Bearer " + authToken;
     }
 
     private String extractErrorMessage(Response<?> response) {
@@ -79,14 +216,33 @@ class RoutineRemoteDataSource {
             try {
                 errorBody.close();
             } catch (Exception ignored) {
-                // Ignored.
             }
         }
     }
 
-    interface RemoteCallback {
-        void onSuccess();
+    // CALLBACKS
+    public interface CreateRoutineCallback {
+        void onSuccess(RoutineResponse routine);
+        void onError(@Nullable String errorMessage, @Nullable Throwable throwable);
+    }
 
+    public interface GetRoutineCallback {
+        void onSuccess(RoutineResponse routine);
+        void onError(@Nullable String errorMessage, @Nullable Throwable throwable);
+    }
+
+    public interface GetAllRoutinesCallback {
+        void onSuccess(List<RoutineResponse> routines);
+        void onError(@Nullable String errorMessage, @Nullable Throwable throwable);
+    }
+
+    public interface UpdateRoutineCallback {
+        void onSuccess(RoutineResponse routine);
+        void onError(@Nullable String errorMessage, @Nullable Throwable throwable);
+    }
+
+    public interface DeleteRoutineCallback {
+        void onSuccess();
         void onError(@Nullable String errorMessage, @Nullable Throwable throwable);
     }
 }
