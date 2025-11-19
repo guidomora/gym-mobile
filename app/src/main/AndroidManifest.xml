@@ -22,6 +22,8 @@
         android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config">
 
+        <activity android:name=".EditarPerfilActivity" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="true">
