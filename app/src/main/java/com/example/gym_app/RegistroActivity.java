@@ -125,35 +125,16 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private void loadGyms() {
-        // 1. Crear la lista manual con los nombres EXACTOS que acepta el backend
-        List<String> gymNames = new ArrayList<>();
-        gymNames.add("Fitter");      // Opción 0 (Por defecto)
-        gymNames.add("Gold Gym");
-        gymNames.add("Super Sport");
-
-        // 2. Configurar el adaptador básico de Android para Strings
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                gymNames
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // 3. Asignar al Spinner
         if (gymSpinner != null) {
-            gymSpinner.setAdapter(adapter);
-            gymSpinner.setEnabled(true); // Asegurar que esté habilitado
-            gymSpinner.setSelection(0);  // Forzar que seleccione "Fitter" visualmente
+            gymSpinner.setEnabled(false);
         }
-    }
-    /*private void loadGyms() {
-        gymSpinner.setEnabled(false);
 
         gymRepository.getAllGyms(this, new GymRepository.GetAllGymsCallback() {
             @Override
             public void onSuccess(List<GymResponse> gyms) {
                 if (gyms == null || gyms.isEmpty()) {
-                    Toast.makeText(RegistroActivity.this, "No hay gimnasios disponibles", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegistroActivity.this, "No se encontraron gimnasios disponibles", Toast.LENGTH_SHORT).show();
+                    if (gymSpinner != null) gymSpinner.setEnabled(true);
                     return;
                 }
 
@@ -164,17 +145,22 @@ public class RegistroActivity extends AppCompatActivity {
                 );
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                gymSpinner.setAdapter(adapter);
-                gymSpinner.setEnabled(true);
+                if (gymSpinner != null) {
+                    gymSpinner.setAdapter(adapter);
+                    gymSpinner.setEnabled(true);
+                }
             }
 
             @Override
             public void onError(String errorMessage) {
-                gymSpinner.setEnabled(true);
+                if (gymSpinner != null) {
+                    gymSpinner.setEnabled(true);
+                }
+                Toast.makeText(RegistroActivity.this, "Error cargando gimnasios: " + errorMessage, Toast.LENGTH_LONG).show();
             }
         });
     }
-*/
+
     private void registerInputListeners() {
         usernameInput.addTextChangedListener(createErrorCleaner(usernameInput));
         phoneInput.addTextChangedListener(createErrorCleaner(phoneInput));
