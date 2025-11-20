@@ -231,13 +231,11 @@ public class RoutineRepository {
         cancelOngoingCall();
         String authToken = authSessionManager.getAuthToken(context);
 
-        // Asumiendo que agregaste este método en tu RemoteDataSource similar a los otros
         ongoingCall = routineRemoteDataSource.getRoutinesByUserId(authToken, userId,
                 new RoutineRemoteDataSource.GetAllRoutinesCallback() {
                     @Override
                     public void onSuccess(List<RoutineResponse> routines) {
                         ongoingCall = null;
-                        // Mapeamos la respuesta de la API al modelo local Routine
                         List<Routine> mappedRoutines = mapRoutineResponses(routines);
                         callback.onSuccess(mappedRoutines);
                     }

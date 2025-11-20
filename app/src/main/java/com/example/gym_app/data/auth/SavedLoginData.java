@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 public class SavedLoginData {
 
+    private final Long userId;
     private final String email;
     private final String displayName;
     private final String authToken;
@@ -11,7 +12,8 @@ public class SavedLoginData {
     private final String role;
     private final String gymName;
 
-    SavedLoginData(String email, String displayName, String authToken, boolean rememberMe, String role, String gymName) {
+    SavedLoginData(Long userId, String email, String displayName, String authToken, boolean rememberMe, String role, String gymName) {
+        this.userId = userId;
         this.email = email;
         this.displayName = displayName;
         this.authToken = authToken;
@@ -21,8 +23,17 @@ public class SavedLoginData {
     }
 
     // Overloaded constructor for compatibility
+    SavedLoginData(String email, String displayName, String authToken, boolean rememberMe, String role, String gymName) {
+        this(null, email, displayName, authToken, rememberMe, role, gymName);
+    }
+
+    // Overloaded constructor for backward compatibility
     SavedLoginData(String email, String displayName, String authToken, boolean rememberMe, String role) {
-        this(email, displayName, authToken, rememberMe, role, null);
+        this(null, email, displayName, authToken, rememberMe, role, null);
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public String getEmail() {
