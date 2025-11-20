@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log; // Import para logs robustos
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -16,14 +13,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.gym_app.databinding.ActivityPerfilBinding;
+import com.example.gym_app.databinding.ActivityPerfilBinding; // Asegúrate de que esto se genere
 import com.example.gym_app.viewmodel.ProfileViewModel;
 
 public class PerfilActivity extends AppCompatActivity {
 
-    private ImageView profileImageView;
-    private ProfileViewModel viewModel;
     private ActivityPerfilBinding binding;
+    private ProfileViewModel viewModel;
 
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -32,8 +28,8 @@ public class PerfilActivity extends AppCompatActivity {
                     Bundle extras = result.getData().getExtras();
                     if (extras != null) {
                         Bitmap imageBitmap = (Bitmap) extras.get("data");
-                        if (profileImageView != null) {
-                            profileImageView.setImageBitmap(imageBitmap);
+                        if (binding != null) {
+                            binding.ivProfilePic.setImageBitmap(imageBitmap);
                         }
                     }
                 }
@@ -43,18 +39,11 @@ public class PerfilActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
         binding = ActivityPerfilBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-
-        LinearLayout homeButton = findViewById(R.id.nav_home);
-        LinearLayout todayButton = findViewById(R.id.nav_today);
-        profileImageView = findViewById(R.id.iv_profile_pic);
-        Button btnLogout = findViewById(R.id.btn_save);
-        Button btnEditProfile = findViewById(R.id.btn_edit_profile);
-        Button btnLinkMembership = findViewById(R.id.btn_link_membership);
 
         viewModel.getLogoutSuccess().observe(this, success -> {
             if (Boolean.TRUE.equals(success)) {
@@ -65,33 +54,30 @@ public class PerfilActivity extends AppCompatActivity {
             }
         });
 
-        homeButton.setOnClickListener(v -> {
+
+        binding.navHome.setOnClickListener(v -> {
             Intent intent = new Intent(PerfilActivity.this, RutinasActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         });
 
-        todayButton.setOnClickListener(v -> {
-            startActivity(new Intent(PerfilActivity.this, HoyActivity.class));
-        });
+        binding.navToday.setOnClickListener(v ->
+                startActivity(new Intent(PerfilActivity.this, HoyActivity.class))
+        );
 
-        if (profileImageView != null) {
-            profileImageView.setOnClickListener(v -> openCamera());
-        }
+        binding.ivProfilePic.setOnClickListener(v -> openCamera());
 
-        if (btnLogout != null) {
-            btnLogout.setOnClickListener(v -> viewModel.logout());
-        }
+        binding.btnSave.setOnClickListener(v -> viewModel.logout());
 
-        if (btnEditProfile != null) {
-            btnEditProfile.setOnClickListener(v -> {
-                startActivity(new Intent(PerfilActivity.this, EditarPerfilActivity.class));
+        binding.btnEditProfile.setOnClickListener(v ->
+                startActivity(new Intent(PerfilActivity.this, EditarPerfilActivity.class))
+        );
+
+        if (binding.btnLinkMembership != null) {
+            binding.btnLinkMembership.setOnClickListener(v -> {
+                Toast.makeText(this, "Función de membresía en construcción", Toast.LENGTH_SHORT).show();
             });
         }
-    }
-
-    private void observeUiState() {
-
     }
 
     private void openCamera() {

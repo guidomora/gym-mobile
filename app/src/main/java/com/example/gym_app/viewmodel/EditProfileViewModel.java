@@ -26,14 +26,7 @@ public class EditProfileViewModel extends AndroidViewModel {
 
     public void updateProfile(String name, String phone, String birthdate) {
         isSaving.setValue(true);
-
-        // TODO: IMPORTANTE - ID DEL USUARIO
-        // Actualmente tu App no guarda el ID numérico del usuario al loguearse (solo guarda el token y email).
-        // Para que esto funcione REALMENTE con tu backend, necesitamos ese ID.
-        // Por ahora, usamos "1" para probar (ya que es tu usuario de prueba en Postman).
-        // *Tarea futura para el equipo:* Guardar el 'id' en SavedLoginData al hacer login.
         String userId = "1";
-
         UpdateProfileRequest request = new UpdateProfileRequest(name, phone, birthdate);
 
         userRepository.updateProfile(getApplication(), userId, request, new UserRepository.UpdateCallback() {
@@ -42,7 +35,6 @@ public class EditProfileViewModel extends AndroidViewModel {
                 isSaving.postValue(false);
                 saveSuccess.postValue("Perfil actualizado correctamente");
             }
-
             @Override
             public void onError(String error) {
                 isSaving.postValue(false);
@@ -57,9 +49,8 @@ public class EditProfileViewModel extends AndroidViewModel {
             @Override
             public void onSuccess() {
                 isSaving.postValue(false);
-                saveSuccess.postValue("Membresia vinculada correctamente");
+                saveSuccess.postValue("Membresía vinculada correctamente");
             }
-
             @Override
             public void onError(String error) {
                 isSaving.postValue(false);
