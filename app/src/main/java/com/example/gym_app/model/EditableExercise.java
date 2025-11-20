@@ -19,24 +19,29 @@ public class EditableExercise {
             Pattern.compile("(\\d+)\\s*series\\s*x\\s*(.+)", Pattern.CASE_INSENSITIVE);
 
     private final String id;
+    @Nullable
+    private Long backendId;
     private String name;
     private String series;
     private String repetitions;
     private String rest;
     private String suggestedWeight;
+    private String weightType;
 
     public EditableExercise() {
-        this(UUID.randomUUID().toString(), "", "", "", "", "");
+        this(UUID.randomUUID().toString(), null, "", "", "", "", "", "");
     }
 
-    public EditableExercise(String id, String name, String series, String repetitions,
-                            String rest, String suggestedWeight) {
+    public EditableExercise(String id, Long backendId, String name, String series, String repetitions,
+                            String rest, String suggestedWeight, String weightType) {
         this.id = id == null ? UUID.randomUUID().toString() : id;
+        this.backendId = backendId;
         this.name = valueOrEmpty(name);
         this.series = valueOrEmpty(series);
         this.repetitions = valueOrEmpty(repetitions);
         this.rest = valueOrEmpty(rest);
         this.suggestedWeight = valueOrEmpty(suggestedWeight);
+        this.weightType = valueOrEmpty(weightType);
     }
 
     public static EditableExercise fromExercise(@Nullable Exercise exercise) {
@@ -44,7 +49,9 @@ public class EditableExercise {
             return new EditableExercise();
         }
         String name = valueOrEmpty(exercise.getName());
-        String rest = valueOrEmpty(exercise.getRest());
+        String rest = exercise.getRestTime() == null
+                ? valueOrEmpty(exercise.getRest())
+                : String.valueOf(exercise.getRestTime());
         String setsReps = valueOrEmpty(exercise.getSetsReps());
 
         String series = "";
@@ -58,7 +65,9 @@ public class EditableExercise {
                 series = setsReps;
             }
         }
-        return new EditableExercise(UUID.randomUUID().toString(), name, series, repetitions, rest, "");
+        Long remoteId = exercise.getId();
+        String weightType = valueOrEmpty(exercise.getWeightType());
+        return new EditableExercise(UUID.randomUUID().toString(), remoteId, name, series, repetitions, rest, "", weightType);
     }
 
     private static String cleanSuffix(String value) {
@@ -87,11 +96,40 @@ public class EditableExercise {
             setsRepsBuilder.append(repetitions.trim());
         }
 
-        return new Exercise(name, setsRepsBuilder.toString().trim(), rest);
+        Integer restTime = parseIntegerOrNull(rest);
+        Integer setsInt = parseIntegerOrNull(series);
+        Integer repetitionsInt = parseIntegerOrNull(repetitions);
+        return new Exercise(backendId,
+                name,
+                setsInt,
+                repetitionsInt,
+                restTime,
+                weightType,
+                null,
+                setsRepsBuilder.toString().trim(),
+                restTime == null ? rest : restTime + " seg");
+    }
+
+    @Nullable
+    private Integer parseIntegerOrNull(String value) {
+        try {
+            return Integer.parseInt(value.trim());
+        } catch (Exception exception) {
+            return null;
+        }
     }
 
     public String getId() {
         return id;
+    }
+
+    @Nullable
+    public Long getBackendId() {
+        return backendId;
+    }
+
+    public void setBackendId(@Nullable Long backendId) {
+        this.backendId = backendId;
     }
 
     public String getName() {
@@ -132,6 +170,14 @@ public class EditableExercise {
 
     public void setSuggestedWeight(String suggestedWeight) {
         this.suggestedWeight = valueOrEmpty(suggestedWeight);
+    }
+
+    public String getWeightType() {
+        return weightType;
+    }
+
+    public void setWeightType(String weightType) {
+        this.weightType = valueOrEmpty(weightType);
     }
 
     @NonNull
