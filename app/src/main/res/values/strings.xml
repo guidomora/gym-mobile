@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gym_app</string>
+    <string name="app_name">Gym-Pass</string>
     <string name="registro">Registro</string>
     <string name="registro_username_hint">Usuario *</string>
     <string name="registro_phone_hint">Telefono</string>
