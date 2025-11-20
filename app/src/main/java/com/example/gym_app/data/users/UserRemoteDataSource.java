@@ -2,7 +2,6 @@ package com.example.gym_app.data.users;
 
 import android.text.TextUtils;
 import androidx.annotation.Nullable;
-import com.example.gym_app.data.users.UserResponse; // Asegúrate de importar tu DTO
 import org.json.JSONObject;
 import java.util.List;
 import okhttp3.ResponseBody;
@@ -15,7 +14,6 @@ public class UserRemoteDataSource {
     private final UserApiService apiService;
 
     public UserRemoteDataSource() {
-        // Asumo que tienes un UserServiceFactory similar al de rutinas
         this(UserServiceFactory.createService());
     }
 
@@ -23,7 +21,6 @@ public class UserRemoteDataSource {
         this.apiService = apiService;
     }
 
-    // OBTENER TODOS LOS USUARIOS
     public Call<List<UserResponse>> getAllUsers(@Nullable String authToken,
                                                 final GetAllUsersCallback callback) {
         String authHeader = buildAuthHeader(authToken);
@@ -89,7 +86,6 @@ public class UserRemoteDataSource {
         }
     }
 
-    // CORREGIDO: Nombre de la interfaz y nombre del parámetro
     public interface GetAllUsersCallback {
         void onSuccess(List<UserResponse> users);
         void onError(@Nullable String errorMessage, @Nullable Throwable throwable);

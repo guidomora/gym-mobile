@@ -242,6 +242,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
+        android:layout_marginEnd="200dp"
+        android:layout_marginBottom="20dp"
         android:background="#FF2E22"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
@@ -250,10 +252,8 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:backgroundTint="@null"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav"
-        app:layout_constraintEnd_toEndOf="parent"
-         />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

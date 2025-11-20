@@ -48,7 +48,6 @@ public class RoutineRepository {
         this.authSessionManager = authSessionManager;
     }
 
-    // OBTENER TODAS LAS RUTINAS (desde API)
     public void getAllRoutines(Context context, final GetAllRoutinesCallback callback) {
         if (context == null || callback == null) {
             return;
@@ -74,7 +73,6 @@ public class RoutineRepository {
                 });
     }
 
-    // OBTENER RUTINA POR ID (desde API)
     public void getRoutineById(Context context, Long routineId, final GetRoutineCallback callback) {
         if (context == null || routineId == null || callback == null) {
             return;
@@ -100,7 +98,6 @@ public class RoutineRepository {
                 });
     }
 
-    // CREAR RUTINA (API)
     public void createRoutine(Context context,
                               CreateRoutineRequest request,
                               final CreateRoutineCallback callback) {
@@ -127,7 +124,6 @@ public class RoutineRepository {
                 });
     }
 
-    // ACTUALIZAR RUTINA (API)
     public void updateRoutine(Context context,
                               Long routineId,
                               UpdateRoutineRequest request,

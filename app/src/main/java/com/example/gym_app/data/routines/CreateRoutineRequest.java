@@ -5,16 +5,15 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Set;
 
-// Request para crear rutina
 public class CreateRoutineRequest {
     @SerializedName("name")
     private String name;
 
     @SerializedName("dayOfWeek")
-    private String dayOfWeek; // "MONDAY", "TUESDAY", etc.
+    private String dayOfWeek;
 
     @SerializedName("date")
-    private String date; // Formato: "2025-11-18"
+    private String date;
 
     @SerializedName("studentId")
     private Long studentId;
@@ -30,7 +29,6 @@ public class CreateRoutineRequest {
         this.exerciseIds = exerciseIds;
     }
 
-    // Getters y Setters
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 

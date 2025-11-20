@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Set;
 
-// Request para crear rutina
 public class UpdateRoutineRequest {
     @SerializedName("name")
     private String name;
@@ -23,7 +22,6 @@ public class UpdateRoutineRequest {
 
     public UpdateRoutineRequest() {}
 
-    // Getters y Setters
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 

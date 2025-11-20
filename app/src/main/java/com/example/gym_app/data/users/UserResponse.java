@@ -4,7 +4,7 @@ public class UserResponse {
     private Long id;
     private String name;
     private String email;
-    private String role; // Recibiremos el Enum como String ("STUDENT", "TRAINER")
+    private String role;
     private String gymName;
 
     // Getters

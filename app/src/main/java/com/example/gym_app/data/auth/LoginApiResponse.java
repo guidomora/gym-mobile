@@ -115,6 +115,14 @@ class LoginApiResponse {
         return null;
     }
 
+    String getResolvedGymName() {
+        ApiUser resolvedUser = firstNonNull(user, data);
+        if (resolvedUser != null) {
+            return resolvedUser.getGymName();
+        }
+        return null;
+    }
+
     private ApiUser firstNonNull(ApiUser first, ApiUser second) {
         return first != null ? first : second;
     }
@@ -141,6 +149,13 @@ class LoginApiResponse {
 
         @SerializedName("type")
         private String type;
+
+        @SerializedName("gym")
+        private String gym;
+
+        @SerializedName("gymName")
+        private String gymName;
+
         String getEmail() {
             if (!TextUtils.isEmpty(email)) {
                 return email;
@@ -182,6 +197,16 @@ class LoginApiResponse {
             }
             if (!TextUtils.isEmpty(type)) {
                 return type;
+            }
+            return null;
+        }
+
+        String getGymName() {
+            if (!TextUtils.isEmpty(gymName)) {
+                return gymName;
+            }
+            if (!TextUtils.isEmpty(gym)) {
+                return gym;
             }
             return null;
         }

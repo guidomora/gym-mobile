@@ -51,7 +51,7 @@ public class RutinaActivity extends AppCompatActivity {
         routineTitle = findViewById(R.id.tv_routine_title);
         routineMeta = findViewById(R.id.tv_routine_meta);
         emptyState = findViewById(R.id.tv_empty_state);
-        progressBar = findViewById(R.id.progress_bar); // Agregar en layout
+        progressBar = findViewById(R.id.progress_bar);
         exercisesRecyclerView = findViewById(R.id.rv_exercises);
 
         exercisesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -60,25 +60,21 @@ public class RutinaActivity extends AppCompatActivity {
 
         routineRepository = new RoutineRepository();
 
-        // Intentar cargar desde API primero
         String routineId = getIntent().getStringExtra(EXTRA_ROUTINE_ID);
         if (!TextUtils.isEmpty(routineId)) {
             try {
                 Long routineIdLong = Long.parseLong(routineId);
                 loadRoutineFromApi(routineIdLong);
             } catch (NumberFormatException e) {
-                // Fallback a datos locales
                 loadRoutineLocal();
             }
         } else {
-            // Si no hay ID, usar datos de los extras
             loadRoutineFromExtras();
         }
 
         backButton.setOnClickListener(v -> finish());
 
         homeButton.setOnClickListener(v -> {
-            // No hace nada porque ya está en home
         });
 
         todayButton.setOnClickListener(v ->
@@ -104,7 +100,6 @@ public class RutinaActivity extends AppCompatActivity {
                 Toast.makeText(RutinaActivity.this,
                         errorMessage,
                         Toast.LENGTH_SHORT).show();
-                // Fallback a datos locales
                 loadRoutineLocal();
             }
         });
@@ -176,7 +171,6 @@ public class RutinaActivity extends AppCompatActivity {
             exercisesRecyclerView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
         if (emptyState != null && !show) {
-            // El empty state se maneja en bindExercises
             emptyState.setVisibility(View.GONE);
         }
     }

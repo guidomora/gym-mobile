@@ -52,7 +52,6 @@ public class RutinasActivity extends AppCompatActivity {
         LinearLayout profileButton = findViewById(R.id.nav_profile);
 
         homeButton.setOnClickListener(v -> {
-            // Ya estás en home
         });
 
         todayButton.setOnClickListener(v ->
@@ -61,14 +60,12 @@ public class RutinasActivity extends AppCompatActivity {
         profileButton.setOnClickListener(v ->
                 startActivity(new Intent(RutinasActivity.this, PerfilActivity.class)));
 
-        // Cargar rutinas desde la API
         loadRoutinesFromApi();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Recargar rutinas cuando vuelves a la activity
         loadRoutinesFromApi();
     }
 
@@ -93,7 +90,6 @@ public class RutinasActivity extends AppCompatActivity {
                 Toast.makeText(RutinasActivity.this,
                         errorMessage,
                         Toast.LENGTH_LONG).show();
-                // Fallback: cargar rutinas locales si falla la API
                 loadLocalRoutines();
             }
         });

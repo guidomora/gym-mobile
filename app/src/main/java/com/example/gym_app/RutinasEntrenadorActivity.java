@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider; // Clave para MVVM
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +20,7 @@ import com.example.gym_app.adapter.TrainerRoutineAdapter;
 import com.example.gym_app.data.TrainerDashboardLocalDataSource;
 import com.example.gym_app.model.Routine;
 import com.example.gym_app.model.TrainerStudent;
-import com.example.gym_app.viewmodel.TrainerViewModel; // Tu nuevo ViewModel
+import com.example.gym_app.viewmodel.TrainerViewModel;
 
 import java.util.ArrayList;
 

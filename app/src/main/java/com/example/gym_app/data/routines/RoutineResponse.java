@@ -23,7 +23,6 @@ public class RoutineResponse {
     @SerializedName("exerciseIds")
     private Set<Long> exerciseIds;
 
-    // Getters
     public Long getId() { return id; }
     public String getName() { return name; }
     public String getDayOfWeek() { return dayOfWeek; }

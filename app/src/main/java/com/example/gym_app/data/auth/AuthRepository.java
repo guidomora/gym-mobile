@@ -46,6 +46,7 @@ public class AuthRepository {
                         result.getDisplayName(),
                         result.getAuthToken(),
                         result.getRole(),
+                        result.getGymName(),
                         credentials.isRememberMe());
                 callback.onSuccess(result);
             }
@@ -90,6 +91,7 @@ public class AuthRepository {
                         result.getDisplayName(),
                         result.getAuthToken(),
                         result.getRole(),
+                        result.getGymName(),
                         true);
                 callback.onSuccess(result);
             }
@@ -127,6 +129,7 @@ public class AuthRepository {
         String token = null;
         String message = null;
         String role = null;
+        String gymName = null;
 
         if (response != null) {
             String resolvedEmail = response.getResolvedEmail();
@@ -137,6 +140,7 @@ public class AuthRepository {
             token = response.getResolvedToken();
             message = response.getMessage();
             role = response.getResolvedRole();
+            gymName = response.getResolvedGymName();
         }
 
         if (TextUtils.isEmpty(displayName)) {
@@ -147,7 +151,7 @@ public class AuthRepository {
             role = fallbackRole;
         }
 
-        return new LoginResult(email, displayName, token, message, role);
+        return new LoginResult(email, displayName, token, message, role, gymName);
     }
 
     private String resolveErrorMessage(Context context, @Nullable String errorMessage, @Nullable Throwable throwable) {
