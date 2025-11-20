@@ -53,6 +53,7 @@
     <string name="trainer_routines_title">Rutinas</string>
     <string name="trainer_add_routine_cta">Rutina +</string>
     <string name="trainer_no_routines_assigned">Este alumno aún no tiene rutinas asignadas.</string>
+    <string name="trainer_no_students_assigned">Este entrenador aún no tiene alumnos asignados.</string>
     <string name="trainer_back_content_description">Volver</string>
     <string name="trainer_home_content_description">Inicio</string>
     <string name="trainer_home_label">Inicio</string>
