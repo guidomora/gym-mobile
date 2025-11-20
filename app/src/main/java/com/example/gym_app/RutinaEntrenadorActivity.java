@@ -107,6 +107,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
             bindRoutine(null);
         }
 
+
         addExerciseButton.setOnClickListener(v -> {
             exerciseAdapter.addExercise(new EditableExercise());
         });
