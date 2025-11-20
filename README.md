@@ -1,6 +1,6 @@
-# Gym-Mobile App
+# Gym-Pass App
 
-Bienvenido al repositorio de la aplicación móvil **Gym-Mobile**. Esta es una aplicación nativa de Android desarrollada en **Java**, diseñada para gestionar rutinas de gimnasio, permitiendo la interacción entre Entrenadores y Alumnos.
+Bienvenido al repositorio de la aplicación móvil **Gym-Pass**. Esta es una aplicación nativa de Android desarrollada en **Java**, diseñada para gestionar rutinas de gimnasio, permitiendo la interacción entre Entrenadores y Alumnos.
 
 ## 🚀 Características Principales
 
@@ -55,12 +55,12 @@ El proyecto utiliza Retrofit, por lo que necesitas ubicar los archivos donde se 
 1.  **Clonar el repositorio:**
     ```bash
     git clone <url-del-repositorio>
-    cd gym-mobile
+    cd gym-pass
     ```
 
 2.  **Abrir en Android Studio:**
     *   Abre Android Studio.
-    *   Selecciona "Open" y busca la carpeta `gym-mobile`.
+    *   Selecciona "Open" y busca la carpeta `gym-pass`.
 
 3.  **Sincronizar Gradle:**
     *   Espera a que Android Studio descargue todas las dependencias (Retrofit, etc.).
