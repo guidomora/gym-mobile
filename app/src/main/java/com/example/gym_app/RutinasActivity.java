@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gym_app.adapter.RoutineAdapter;
 import com.example.gym_app.data.RoutineRepository;
+import com.example.gym_app.data.auth.AuthSessionManager;
 import com.example.gym_app.model.Routine;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 public class RutinasActivity extends AppCompatActivity {
 
     private RoutineRepository routineRepository;
+    private AuthSessionManager authSessionManager;
     private RoutineAdapter routineAdapter;
     private ProgressBar progressBar;
     private TextView emptyStateTextView;
@@ -38,6 +40,7 @@ public class RutinasActivity extends AppCompatActivity {
 
         routinesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         routineRepository = new RoutineRepository();
+        authSessionManager = new AuthSessionManager();
 
         routineAdapter = new RoutineAdapter(new RoutineAdapter.OnRoutineClickListener() {
             @Override
@@ -71,8 +74,13 @@ public class RutinasActivity extends AppCompatActivity {
 
     private void loadRoutinesFromApi() {
         showLoading(true);
-
-        routineRepository.getAllRoutines(this, new RoutineRepository.GetAllRoutinesCallback() {
+        Long userId = authSessionManager.getUserId(this);
+        if (userId == null) {
+            showLoading(false);
+            showEmptyState(true);
+            return;
+        }
+        routineRepository.getRoutinesByUserId(this, userId, new RoutineRepository.GetAllRoutinesCallback() {
             @Override
             public void onSuccess(List<Routine> routines) {
                 showLoading(false);

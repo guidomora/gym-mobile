@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.view.KeyEvent;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -21,13 +22,17 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gym_app.data.GymRepository;
 import com.example.gym_app.data.auth.AuthRepository;
+import com.example.gym_app.data.gyms.GymResponse;
 import com.example.gym_app.model.LoginResult;
 import com.example.gym_app.navigation.AuthNavigator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class RegistroActivity extends AppCompatActivity {
@@ -42,7 +47,9 @@ public class RegistroActivity extends AppCompatActivity {
     private Spinner roleSpinner;
     private Button registerButton;
     private String registerButtonDefaultText;
+
     private AuthRepository authRepository;
+    private GymRepository gymRepository;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, RegistroActivity.class);
@@ -57,8 +64,8 @@ public class RegistroActivity extends AppCompatActivity {
         registerInputListeners();
 
         authRepository = new AuthRepository();
+        gymRepository = new GymRepository();
 
-        Button registerButton = findViewById(R.id.btn_register);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +83,8 @@ public class RegistroActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        loadGyms();
     }
 
     private void bindViews() {
@@ -115,6 +124,57 @@ public class RegistroActivity extends AppCompatActivity {
         });
     }
 
+    private void loadGyms() {
+        // 1. Crear la lista manual con los nombres EXACTOS que acepta el backend
+        List<String> gymNames = new ArrayList<>();
+        gymNames.add("Fitter");      // Opción 0 (Por defecto)
+        gymNames.add("Gold Gym");
+        gymNames.add("Super Sport");
+
+        // 2. Configurar el adaptador básico de Android para Strings
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_item,
+                gymNames
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // 3. Asignar al Spinner
+        if (gymSpinner != null) {
+            gymSpinner.setAdapter(adapter);
+            gymSpinner.setEnabled(true); // Asegurar que esté habilitado
+            gymSpinner.setSelection(0);  // Forzar que seleccione "Fitter" visualmente
+        }
+    }
+    /*private void loadGyms() {
+        gymSpinner.setEnabled(false);
+
+        gymRepository.getAllGyms(this, new GymRepository.GetAllGymsCallback() {
+            @Override
+            public void onSuccess(List<GymResponse> gyms) {
+                if (gyms == null || gyms.isEmpty()) {
+                    Toast.makeText(RegistroActivity.this, "No hay gimnasios disponibles", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                ArrayAdapter<GymResponse> adapter = new ArrayAdapter<>(
+                        RegistroActivity.this,
+                        android.R.layout.simple_spinner_item,
+                        gyms
+                );
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                gymSpinner.setAdapter(adapter);
+                gymSpinner.setEnabled(true);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                gymSpinner.setEnabled(true);
+            }
+        });
+    }
+*/
     private void registerInputListeners() {
         usernameInput.addTextChangedListener(createErrorCleaner(usernameInput));
         phoneInput.addTextChangedListener(createErrorCleaner(phoneInput));
@@ -127,15 +187,9 @@ public class RegistroActivity extends AppCompatActivity {
     private TextWatcher createErrorCleaner(final EditText target) {
         return new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No-op
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // No-op
-            }
-
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
                 target.setError(null);
@@ -148,7 +202,6 @@ public class RegistroActivity extends AppCompatActivity {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-
 
         DatePickerDialog dialog = new DatePickerDialog(
                 this,
@@ -164,7 +217,6 @@ public class RegistroActivity extends AppCompatActivity {
                 month,
                 day
         );
-
         dialog.show();
     }
 
@@ -175,7 +227,16 @@ public class RegistroActivity extends AppCompatActivity {
         String birthdate = birthdateInput.getText() != null ? birthdateInput.getText().toString().trim() : "";
         String password = passwordInput.getText() != null ? passwordInput.getText().toString() : "";
         String confirmPassword = confirmPasswordInput.getText() != null ? confirmPasswordInput.getText().toString() : "";
-        String selectedGym = gymSpinner.getSelectedItem() != null ? gymSpinner.getSelectedItem().toString() : "";
+
+        String selectedGymName = "";
+        Object selectedItem = gymSpinner.getSelectedItem();
+
+        if (selectedItem instanceof GymResponse) {
+            selectedGymName = ((GymResponse) selectedItem).getNombre();
+        } else if (selectedItem != null) {
+            selectedGymName = selectedItem.toString();
+        }
+
         String selectedRole = roleSpinner.getSelectedItem() != null ? roleSpinner.getSelectedItem().toString() : "";
 
         boolean hasError = false;
@@ -222,7 +283,7 @@ public class RegistroActivity extends AppCompatActivity {
             hasError = true;
         }
 
-        if (TextUtils.isEmpty(selectedGym)) {
+        if (TextUtils.isEmpty(selectedGymName)) {
             Toast.makeText(this, R.string.error_gym_required, Toast.LENGTH_SHORT).show();
             hasError = true;
         }
@@ -246,7 +307,7 @@ public class RegistroActivity extends AppCompatActivity {
                 apiBirthdate,
                 apiRole,
                 password,
-                selectedGym
+                selectedGymName
         );
 
         onRegisterDataReady(formData);
@@ -304,7 +365,7 @@ public class RegistroActivity extends AppCompatActivity {
                 return apiFormat.format(parsedDate);
             }
         } catch (ParseException ignored) {
-            // Ignored, handled by returning null.
+            // Ignored
         }
         return null;
     }

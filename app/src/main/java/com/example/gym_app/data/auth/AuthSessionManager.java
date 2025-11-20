@@ -28,4 +28,13 @@ public class AuthSessionManager {
         SavedLoginData savedLoginData = preferencesDataSource.getSavedLoginData(context);
         return savedLoginData.getAuthToken();
     }
+
+    @Nullable
+    public Long getUserId(Context context) {
+        if (context == null) {
+            return null;
+        }
+        SavedLoginData savedLoginData = preferencesDataSource.getSavedLoginData(context);
+        return savedLoginData.getUserId();
+    }
 }

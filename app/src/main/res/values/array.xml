@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="gym_options">
-        <item>Super Sport</item>
-        <item>Fitter</item>
-        <item>Gold Gym</item>
-    </string-array>
+    <!-- The gym options are now loaded dynamically from the API -->
 </resources>

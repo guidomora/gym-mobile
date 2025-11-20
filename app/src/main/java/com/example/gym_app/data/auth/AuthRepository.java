@@ -42,6 +42,7 @@ public class AuthRepository {
                 ongoingLoginCall = null;
                 LoginResult result = buildLoginResult(credentials, response, null);
                 preferencesDataSource.saveSession(context,
+                        result.getUserId(),
                         result.getEmail(),
                         result.getDisplayName(),
                         result.getAuthToken(),
@@ -87,6 +88,7 @@ public class AuthRepository {
                 LoginCredentials credentials = new LoginCredentials(formData.getEmail(), formData.getPassword(), true);
                 LoginResult result = buildLoginResult(credentials, response, formData.getRole());
                 preferencesDataSource.saveSession(context,
+                        result.getUserId(),
                         result.getEmail(),
                         result.getDisplayName(),
                         result.getAuthToken(),
@@ -124,6 +126,7 @@ public class AuthRepository {
     private LoginResult buildLoginResult(LoginCredentials credentials,
                                          @Nullable LoginApiResponse response,
                                          @Nullable String fallbackRole) {
+        Long userId = null;
         String email = credentials.getEmail();
         String displayName = null;
         String token = null;
@@ -132,6 +135,7 @@ public class AuthRepository {
         String gymName = null;
 
         if (response != null) {
+            userId = response.getResolvedUserId();
             String resolvedEmail = response.getResolvedEmail();
             if (!TextUtils.isEmpty(resolvedEmail)) {
                 email = resolvedEmail;
@@ -151,7 +155,7 @@ public class AuthRepository {
             role = fallbackRole;
         }
 
-        return new LoginResult(email, displayName, token, message, role, gymName);
+        return new LoginResult(userId, email, displayName, token, message, role, gymName);
     }
 
     private String resolveErrorMessage(Context context, @Nullable String errorMessage, @Nullable Throwable throwable) {

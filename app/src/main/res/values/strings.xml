@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gym_app</string>
+    <string name="app_name">Gym-Pass</string>
     <string name="registro">Registro</string>
     <string name="registro_username_hint">Usuario *</string>
     <string name="registro_phone_hint">Telefono</string>
@@ -53,6 +53,7 @@
     <string name="trainer_routines_title">Rutinas</string>
     <string name="trainer_add_routine_cta">Rutina +</string>
     <string name="trainer_no_routines_assigned">Este alumno aún no tiene rutinas asignadas.</string>
+    <string name="trainer_no_students_assigned">Este entrenador aún no tiene alumnos asignados.</string>
     <string name="trainer_back_content_description">Volver</string>
     <string name="trainer_home_content_description">Inicio</string>
     <string name="trainer_home_label">Inicio</string>
@@ -66,8 +67,8 @@
         <item quantity="one">Ejercicio (%d)</item>
         <item quantity="other">Ejercicios (%d)</item>
     </plurals>
-    <string name="trainer_routine_saved_message">Rutina &quot;%1$s&quot; guardada con %2$d ejercicios (cambios temporales).</string>
-    <string name="trainer_routine_deleted_message">Rutina &quot;%1$s&quot; eliminada (cambios temporales).</string>
+    <string name="trainer_routine_saved_message">Rutina &quot;%1$s&quot; guardada con %2$d ejercicios.</string>
+    <string name="trainer_routine_deleted_message">Rutina &quot;%1$s&quot; eliminada.</string>
     <string name="trainer_routine_delete_error">No se pudo eliminar la rutina. Intenta nuevamente.</string>
     <string name="trainer_routine_create_success">Rutina &quot;%1$s&quot; creada correctamente.</string>
     <string name="trainer_routine_create_error_generic">No se pudo crear la rutina. Intenta nuevamente.</string>

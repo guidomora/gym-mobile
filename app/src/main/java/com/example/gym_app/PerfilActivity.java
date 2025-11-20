@@ -13,7 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.gym_app.databinding.ActivityPerfilBinding; // Asegúrate de que esto se genere
+import com.example.gym_app.databinding.ActivityPerfilBinding;
 import com.example.gym_app.viewmodel.ProfileViewModel;
 
 public class PerfilActivity extends AppCompatActivity {

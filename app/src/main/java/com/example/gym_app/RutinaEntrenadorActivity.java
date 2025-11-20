@@ -54,7 +54,6 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private CharSequence saveButtonOriginalText;
 
-    // Lógica de Edición (Integrada)
     private boolean isEditMode = false;
     @Nullable
     private Long routineIdToEdit;
@@ -109,7 +108,6 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
             bindRoutine(null);
         }
 
-        // Listeners
         addExerciseButton.setOnClickListener(v -> {
             exerciseAdapter.addExercise(new EditableExercise());
         });
@@ -210,6 +208,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
         }
         return true;
     }
+
 
     private List<Long> buildExerciseIds() {
         List<EditableExercise> editableExercises = exerciseAdapter.getExercisesSnapshot();

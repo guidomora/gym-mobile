@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 
 public class LoginResult {
 
+    private final Long userId;
     private final String email;
     private final String displayName;
     private final String authToken;
@@ -11,12 +12,14 @@ public class LoginResult {
     private final String role;
     private final String gymName;
 
-    public LoginResult(String email,
+    public LoginResult(@Nullable Long userId,
+                       String email,
                        String displayName,
                        @Nullable String authToken,
                        @Nullable String message,
                        @Nullable String role,
                        @Nullable String gymName) {
+        this.userId = userId;
         this.email = email;
         this.displayName = displayName;
         this.authToken = authToken;
@@ -25,13 +28,28 @@ public class LoginResult {
         this.gymName = gymName;
     }
 
-    // Constructor for backward compatibility if needed, or just update callers
+    // Constructor for backward compatibility
+    public LoginResult(String email,
+                       String displayName,
+                       @Nullable String authToken,
+                       @Nullable String message,
+                       @Nullable String role,
+                       @Nullable String gymName) {
+        this(null, email, displayName, authToken, message, role, gymName);
+    }
+
+    // Constructor for backward compatibility
     public LoginResult(String email,
                        String displayName,
                        @Nullable String authToken,
                        @Nullable String message,
                        @Nullable String role) {
-        this(email, displayName, authToken, message, role, null);
+        this(null, email, displayName, authToken, message, role, null);
+    }
+
+    @Nullable
+    public Long getUserId() {
+        return userId;
     }
 
     public String getEmail() {

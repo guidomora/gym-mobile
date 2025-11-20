@@ -123,11 +123,22 @@ class LoginApiResponse {
         return null;
     }
 
+    Long getResolvedUserId() {
+        ApiUser resolvedUser = firstNonNull(user, data);
+        if (resolvedUser != null) {
+            return resolvedUser.getId();
+        }
+        return null;
+    }
+
     private ApiUser firstNonNull(ApiUser first, ApiUser second) {
         return first != null ? first : second;
     }
 
     static class ApiUser {
+
+        @SerializedName("id")
+        private Long id;
 
         @SerializedName("email")
         private String email;
@@ -155,6 +166,10 @@ class LoginApiResponse {
 
         @SerializedName("gymName")
         private String gymName;
+
+        Long getId() {
+            return id;
+        }
 
         String getEmail() {
             if (!TextUtils.isEmpty(email)) {
