@@ -61,19 +61,20 @@ class AuthPreferencesDataSource {
             editor.remove(KEY_GYM_NAME);
         }
 
-        if (rememberMe) {
-            editor.putBoolean(KEY_REMEMBER_ME, true);
+        if (!TextUtils.isEmpty(email)) {
             editor.putString(KEY_EMAIL, email);
+        } else {
+            editor.remove(KEY_EMAIL);
+        }
+
+        if (!TextUtils.isEmpty(displayName)) {
             editor.putString(KEY_DISPLAY_NAME, displayName);
         } else {
-            editor.putBoolean(KEY_REMEMBER_ME, false);
-            editor.remove(KEY_EMAIL);
             editor.remove(KEY_DISPLAY_NAME);
-            editor.remove(KEY_TOKEN);
-            editor.remove(KEY_ROLE);
-            editor.remove(KEY_GYM_NAME);
-            editor.remove(KEY_USER_ID);
         }
+
+        editor.putBoolean(KEY_REMEMBER_ME, rememberMe);
+        
         editor.apply();
     }
     

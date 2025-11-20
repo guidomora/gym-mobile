@@ -37,7 +37,7 @@ public class InicioEntrenadorActivity extends AppCompatActivity {
     private TextView emptyStateTextView;
     private ProgressBar loadingIndicator;
 
-    private String currentTrainerGym = "SportClub";
+    private String currentTrainerGym = "Super Sport";
     private String currentTrainerName = "Entrenador Actual";
 
     @Override
