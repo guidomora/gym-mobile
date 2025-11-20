@@ -11,7 +11,10 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-interface RoutineApiService {
+// 1. TOMAMOS 'public' DE TU RAMA (NICO)
+public interface RoutineApiService {
+
+    // 2. TOMAMOS LOS MÉTODOS DE MASTER (Son más nuevos y completos)
 
     @POST("api/routines")
     Call<RoutineResponse> createRoutine(

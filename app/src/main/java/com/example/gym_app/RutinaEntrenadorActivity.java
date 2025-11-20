@@ -15,20 +15,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gym_app.adapter.EditableExerciseAdapter;
 import com.example.gym_app.data.exercises.ExerciseRepository;
 import com.example.gym_app.data.exercises.ExerciseRequest;
-import com.example.gym_app.model.WeightType;
 import com.example.gym_app.data.routines.CreateRoutineRequest;
 import com.example.gym_app.data.RoutineRepository;
+import com.example.gym_app.data.routines.CreateRoutineRequest;
 import com.example.gym_app.data.routines.UpdateRoutineRequest;
 import com.example.gym_app.model.EditableExercise;
 import com.example.gym_app.model.Exercise;
 import com.example.gym_app.model.Routine;
 import com.example.gym_app.model.WeightType;
+import com.example.gym_app.viewmodel.CreateRoutineViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     private final RoutineRepository routineRepository = new RoutineRepository();
     private final ExerciseRepository exerciseRepository = new ExerciseRepository();
     private final Set<Long> loadedExerciseIds = new HashSet<>();
+    private CreateRoutineViewModel viewModel;
 
     private EditableExerciseAdapter exerciseAdapter;
     private EditText routineNameEditText;
@@ -57,18 +60,20 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     private Button saveButton;
     private ProgressBar progressBar;
     private CharSequence saveButtonOriginalText;
-    private boolean isSavingRoutine;
+
     private boolean isEditMode = false;
+    @Nullable
+    private Long routineIdToEdit;
 
     @Nullable
     private String studentId;
-    @Nullable
-    private Long routineIdToEdit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rutina_entrenador);
+
+        viewModel = new ViewModelProvider(this).get(CreateRoutineViewModel.class);
 
         routineNameEditText = findViewById(R.id.et_routine_name);
         routineDaySpinner = findViewById(R.id.spinner_days);
@@ -89,19 +94,22 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         studentId = resolveStudentId(intent);
-
         if (saveButton != null) {
             saveButtonOriginalText = saveButton.getText();
         }
 
+        setupViewModelObservers();
+
         String routineIdStr = intent != null ? intent.getStringExtra(EXTRA_ROUTINE_ID) : null;
         if (!TextUtils.isEmpty(routineIdStr)) {
             isEditMode = true;
+            saveButton.setText("Actualizar Rutina");
             try {
                 routineIdToEdit = Long.parseLong(routineIdStr);
-                loadRoutineFromApi(routineIdToEdit);
+                Routine routine = new RoutineRepository().getRoutineById(this, routineIdStr);
+                bindRoutine(routine);
             } catch (NumberFormatException e) {
-                bindRoutine(loadRoutineLocal());
+                bindRoutine(null);
             }
         } else {
             bindRoutine(null);
@@ -113,14 +121,17 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(v -> {
             if (isEditMode && routineIdToEdit != null) {
-                attemptRoutineUpdate();
+                attemptRoutineUpdate(); // Método nuevo
             } else {
-                attemptRoutineCreation();
+                attemptRoutineCreation(); // Método existente
             }
         });
 
-        homeButton.setOnClickListener(v ->
-                startActivity(new Intent(RutinaEntrenadorActivity.this, InicioEntrenadorActivity.class)));
+        homeButton.setOnClickListener(v -> {
+            Intent homeIntent = new Intent(RutinaEntrenadorActivity.this, InicioEntrenadorActivity.class);
+            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(homeIntent);
+        });
 
         profileButton.setOnClickListener(v ->
                 startActivity(new Intent(RutinaEntrenadorActivity.this, PerfilEntrenadorActivity.class)));
@@ -148,16 +159,21 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
                     } catch (NumberFormatException ignored) {
                     }
                 }
+    private void setupViewModelObservers() {
+        viewModel.getIsSaving().observe(this, isSaving -> {
+            setSavingState(isSaving);
+            if (progressBar != null) {
+                progressBar.setVisibility(isSaving ? View.VISIBLE : View.GONE);
             }
+        });
 
-            @Override
-            public void onError(@NonNull String errorMessage) {
-                showLoading(false);
-                Toast.makeText(RutinaEntrenadorActivity.this,
-                        errorMessage,
-                        Toast.LENGTH_SHORT).show();
-                bindRoutine(loadRoutineLocal());
-            }
+        viewModel.getSuccessMessage().observe(this, message -> {
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            finish();
+        });
+
+        viewModel.getErrorMessage().observe(this, error -> {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         });
     }
 
@@ -166,35 +182,61 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
             routineNameEditText.setText(routine.getName());
             selectDayInSpinner(routine.getDayOfWeek());
             exerciseAdapter.setExercises(mapExercises(routine.getExercises()));
-        } else {
-            Intent intent = getIntent();
-            if (intent != null) {
-                String fallbackName = intent.getStringExtra(EXTRA_ROUTINE_NAME);
-                String fallbackDay = intent.getStringExtra(EXTRA_ROUTINE_DAY);
-                if (!TextUtils.isEmpty(fallbackName)) {
-                    routineNameEditText.setText(fallbackName);
-                }
-                if (!TextUtils.isEmpty(fallbackDay)) {
-                    selectDayInSpinner(fallbackDay);
-                }
-            }
-            exerciseAdapter.setExercises(new ArrayList<>());
         }
         updateLoadedExerciseIds(exerciseAdapter.getExercisesSnapshot());
         updateEmptyState(exerciseAdapter.getItemCount());
     }
 
-    @Nullable
-    private Routine loadRoutineLocal() {
-        Intent intent = getIntent();
-        if (intent == null) {
-            return null;
+    private void attemptRoutineCreation() {
+        if (Boolean.TRUE.equals(viewModel.getIsSaving().getValue())) return;
+        if (!validateInputs()) return;
+
+        String selectedDay = resolveSelectedDay();
+        List<Long> exerciseIds = buildExerciseIds();
+        Long sId = Long.parseLong(studentId);
+
+        CreateRoutineRequest request = new CreateRoutineRequest(
+                routineNameEditText.getText().toString(),
+                selectedDay,
+                buildCurrentDate(),
+                sId,
+                new HashSet<>(exerciseIds)
+        );
+
+        viewModel.createRoutine(request);
+    }
+
+    private void attemptRoutineUpdate() {
+        if (Boolean.TRUE.equals(viewModel.getIsSaving().getValue())) return;
+        if (!validateInputs()) return;
+
+        UpdateRoutineRequest request = new UpdateRoutineRequest();
+        request.setName(routineNameEditText.getText().toString());
+        request.setDayOfWeek(resolveSelectedDay());
+        request.setDate(buildCurrentDate());
+        request.setExerciseIds(new HashSet<>(buildExerciseIds()));
+
+        if (studentId != null) {
+            request.setStudentId(Long.parseLong(studentId));
         }
-        String routineId = intent.getStringExtra(EXTRA_ROUTINE_ID);
-        if (TextUtils.isEmpty(routineId)) {
-            return null;
+
+        viewModel.updateRoutine(routineIdToEdit, request);
+    }
+
+    private boolean validateInputs() {
+        if (TextUtils.isEmpty(studentId)) {
+            Toast.makeText(this, "Error: Falta el alumno", Toast.LENGTH_SHORT).show();
+            return false;
         }
-        return routineRepository.getRoutineById(this, routineId);
+        if (TextUtils.isEmpty(routineNameEditText.getText())) {
+            routineNameEditText.setError("Requerido");
+            return false;
+        }
+        if (TextUtils.isEmpty(resolveSelectedDay())) {
+            Toast.makeText(this, "Selecciona un día", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private Set<Long> buildExerciseIdsSet() {
@@ -706,64 +748,39 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
     }
 
     private void setSavingState(boolean saving) {
-        isSavingRoutine = saving;
-        if (saveButton == null) {
-            return;
-        }
-        saveButton.setEnabled(!saving);
-        if (saving) {
-            saveButton.setText(R.string.trainer_routine_saving);
-        } else if (saveButtonOriginalText != null) {
-            saveButton.setText(saveButtonOriginalText);
+        if (saveButton != null) {
+            saveButton.setEnabled(!saving);
+            saveButton.setText(saving ? "Guardando..." : (isEditMode ? "Actualizar Rutina" : saveButtonOriginalText));
         }
     }
 
     @Nullable
     private String resolveSelectedDay() {
-        if (routineDaySpinner == null || routineDaySpinner.getSelectedItem() == null) {
-            return null;
-        }
+        if (routineDaySpinner == null || routineDaySpinner.getSelectedItem() == null) return null;
         String selectedDay = routineDaySpinner.getSelectedItem().toString();
-        if (TextUtils.isEmpty(selectedDay)) {
-            return null;
-        }
-        String normalized = selectedDay.trim().toLowerCase(Locale.ROOT);
-        switch (normalized) {
-            case "lunes":
-                return "MONDAY";
-            case "martes":
-                return "TUESDAY";
-            case "miércoles":
-            case "miercoles":
-                return "WEDNESDAY";
-            case "jueves":
-                return "THURSDAY";
-            case "viernes":
-                return "FRIDAY";
-            case "sábado":
-            case "sabado":
-                return "SATURDAY";
-            case "domingo":
-                return "SUNDAY";
-            default:
-                return selectedDay.trim().toUpperCase(Locale.ROOT);
-        }
+        return selectedDay.toUpperCase(Locale.ROOT).replace("Á", "A").replace("É", "E");
     }
 
     private String buildCurrentDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        return dateFormat.format(new Date());
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
     }
 
     @Nullable
     private String resolveStudentId(@Nullable Intent intent) {
-        if (intent == null) {
-            return null;
-        }
+        if (intent == null) return null;
         String id = intent.getStringExtra(EXTRA_STUDENT_ID);
-        if (TextUtils.isEmpty(id)) {
-            id = intent.getStringExtra(RutinasEntrenadorActivity.EXTRA_STUDENT_ID);
-        }
+        if (TextUtils.isEmpty(id)) id = intent.getStringExtra(EXTRA_STUDENT_ID);
         return id;
+    }
+
+    private void selectDayInSpinner(@Nullable String day) {
+        if (routineDaySpinner == null || TextUtils.isEmpty(day)) return;
+        String[] days = getResources().getStringArray(R.array.routine_days);
+        for (int i = 0; i < days.length; i++) {
+            if (day.equalsIgnoreCase(days[i])) {
+                routineDaySpinner.setSelection(i);
+                return;
+            }
+        }
     }
 }

@@ -113,9 +113,14 @@ public class AuthRepository {
             ongoingRegisterCall = null;
         }
     }
+
     @NonNull
     public SavedLoginData getSavedLoginData(Context context) {
         return preferencesDataSource.getSavedLoginData(context);
+    }
+
+    public void clearSession(Context context) {
+        preferencesDataSource.clearSession(context);
     }
 
     private LoginResult buildLoginResult(LoginCredentials credentials,

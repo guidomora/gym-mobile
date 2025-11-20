@@ -4,7 +4,11 @@ public class GymResponse {
     private Long id;
     private String nombre;
 
-    // Getters
     public Long getId() { return id; }
     public String getNombre() { return nombre; }
+
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }
