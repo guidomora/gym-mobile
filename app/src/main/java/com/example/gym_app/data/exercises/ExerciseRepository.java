@@ -40,19 +40,22 @@ public class ExerciseRepository {
             return;
         }
         String authToken = authSessionManager.getAuthToken(context);
-        Call<List<ExerciseResponse>> call = remoteDataSource.getExercises(authToken, new ExerciseRemoteDataSource.GetExercisesCallback() {
+        final Call<List<ExerciseResponse>>[] callHolder = new Call[1];
+        ExerciseRemoteDataSource.GetExercisesCallback remoteCallback = new ExerciseRemoteDataSource.GetExercisesCallback() {
             @Override
             public void onSuccess(List<ExerciseResponse> exercises) {
-                ongoingCalls.remove(call);
+                ongoingCalls.remove(callHolder[0]);
                 callback.onSuccess(filterAndMap(exercises, routineId));
             }
 
             @Override
             public void onError(@Nullable String errorMessage, @Nullable Throwable throwable) {
-                ongoingCalls.remove(call);
+                ongoingCalls.remove(callHolder[0]);
                 callback.onError(resolveError(context, errorMessage, throwable));
             }
-        });
+        };
+        Call<List<ExerciseResponse>> call = remoteDataSource.getExercises(authToken, remoteCallback);
+        callHolder[0] = call;
         ongoingCalls.add(call);
     }
 
@@ -63,19 +66,22 @@ public class ExerciseRepository {
             return;
         }
         String authToken = authSessionManager.getAuthToken(context);
-        Call<ExerciseResponse> call = remoteDataSource.createExercise(authToken, request, new ExerciseRemoteDataSource.CreateExerciseCallback() {
+        final Call<ExerciseResponse>[] callHolder = new Call[1];
+        ExerciseRemoteDataSource.CreateExerciseCallback remoteCallback = new ExerciseRemoteDataSource.CreateExerciseCallback() {
             @Override
             public void onSuccess(ExerciseResponse exercise) {
-                ongoingCalls.remove(call);
+                ongoingCalls.remove(callHolder[0]);
                 callback.onSuccess(mapExercise(exercise));
             }
 
             @Override
             public void onError(@Nullable String errorMessage, @Nullable Throwable throwable) {
-                ongoingCalls.remove(call);
+                ongoingCalls.remove(callHolder[0]);
                 callback.onError(resolveError(context, errorMessage, throwable));
             }
-        });
+        };
+        Call<ExerciseResponse> call = remoteDataSource.createExercise(authToken, request, remoteCallback);
+        callHolder[0] = call;
         ongoingCalls.add(call);
     }
 
@@ -87,20 +93,22 @@ public class ExerciseRepository {
             return;
         }
         String authToken = authSessionManager.getAuthToken(context);
-        Call<ExerciseResponse> call = remoteDataSource.updateExercise(authToken, exerciseId, request,
-                new ExerciseRemoteDataSource.UpdateExerciseCallback() {
-                    @Override
-                    public void onSuccess(ExerciseResponse exercise) {
-                        ongoingCalls.remove(call);
-                        callback.onSuccess(mapExercise(exercise));
-                    }
+        final Call<ExerciseResponse>[] callHolder = new Call[1];
+        ExerciseRemoteDataSource.UpdateExerciseCallback remoteCallback = new ExerciseRemoteDataSource.UpdateExerciseCallback() {
+            @Override
+            public void onSuccess(ExerciseResponse exercise) {
+                ongoingCalls.remove(callHolder[0]);
+                callback.onSuccess(mapExercise(exercise));
+            }
 
-                    @Override
-                    public void onError(@Nullable String errorMessage, @Nullable Throwable throwable) {
-                        ongoingCalls.remove(call);
-                        callback.onError(resolveError(context, errorMessage, throwable));
-                    }
-                });
+            @Override
+            public void onError(@Nullable String errorMessage, @Nullable Throwable throwable) {
+                ongoingCalls.remove(callHolder[0]);
+                callback.onError(resolveError(context, errorMessage, throwable));
+            }
+        };
+        Call<ExerciseResponse> call = remoteDataSource.updateExercise(authToken, exerciseId, request, remoteCallback);
+        callHolder[0] = call;
         ongoingCalls.add(call);
     }
 
@@ -111,19 +119,22 @@ public class ExerciseRepository {
             return;
         }
         String authToken = authSessionManager.getAuthToken(context);
-        Call<Void> call = remoteDataSource.deleteExercise(authToken, exerciseId, new ExerciseRemoteDataSource.DeleteExerciseCallback() {
+        final Call<Void>[] callHolder = new Call[1];
+        ExerciseRemoteDataSource.DeleteExerciseCallback remoteCallback = new ExerciseRemoteDataSource.DeleteExerciseCallback() {
             @Override
             public void onSuccess() {
-                ongoingCalls.remove(call);
+                ongoingCalls.remove(callHolder[0]);
                 callback.onSuccess();
             }
 
             @Override
             public void onError(@Nullable String errorMessage, @Nullable Throwable throwable) {
-                ongoingCalls.remove(call);
+                ongoingCalls.remove(callHolder[0]);
                 callback.onError(resolveError(context, errorMessage, throwable));
             }
-        });
+        };
+        Call<Void> call = remoteDataSource.deleteExercise(authToken, exerciseId, remoteCallback);
+        callHolder[0] = call;
         ongoingCalls.add(call);
     }
 
