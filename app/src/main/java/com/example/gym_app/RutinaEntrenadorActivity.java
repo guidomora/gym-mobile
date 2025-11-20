@@ -284,6 +284,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
             }
 
 
+
             Integer restTime = parseNonNegativeInt(editableExercise.getRest());
             if (restTime == null) {
                 showExerciseError(getString(R.string.trainer_exercise_error_invalid_rest, displayIndex));
