@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.view.KeyEvent;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -21,13 +22,17 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gym_app.data.GymRepository;
 import com.example.gym_app.data.auth.AuthRepository;
+import com.example.gym_app.data.gyms.GymResponse;
 import com.example.gym_app.model.LoginResult;
 import com.example.gym_app.navigation.AuthNavigator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class RegistroActivity extends AppCompatActivity {
@@ -43,6 +48,8 @@ public class RegistroActivity extends AppCompatActivity {
     private Button registerButton;
     private String registerButtonDefaultText;
     private AuthRepository authRepository;
+    private GymRepository gymRepository;
+    private List<GymResponse> loadedGyms = new ArrayList<>();
 
     public static Intent createIntent(Context context) {
         return new Intent(context, RegistroActivity.class);
@@ -57,6 +64,7 @@ public class RegistroActivity extends AppCompatActivity {
         registerInputListeners();
 
         authRepository = new AuthRepository();
+        gymRepository = new GymRepository();
 
         Button registerButton = findViewById(R.id.btn_register);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +84,8 @@ public class RegistroActivity extends AppCompatActivity {
                 return false;
             }
         });
+        
+        loadGyms();
     }
 
     private void bindViews() {
@@ -111,6 +121,30 @@ public class RegistroActivity extends AppCompatActivity {
                 if (hasFocus) {
                     showDatePicker();
                 }
+            }
+        });
+    }
+    
+    private void loadGyms() {
+        gymRepository.getAllGyms(this, new GymRepository.GetAllGymsCallback() {
+            @Override
+            public void onSuccess(List<GymResponse> gyms) {
+                loadedGyms = gyms;
+                List<String> gymNames = new ArrayList<>();
+                if (gyms != null) {
+                    for (GymResponse gym : gyms) {
+                        gymNames.add(gym.getNombre());
+                    }
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(RegistroActivity.this,
+                        android.R.layout.simple_spinner_item, gymNames);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                gymSpinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Toast.makeText(RegistroActivity.this, "Error loading gyms: " + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -175,7 +209,14 @@ public class RegistroActivity extends AppCompatActivity {
         String birthdate = birthdateInput.getText() != null ? birthdateInput.getText().toString().trim() : "";
         String password = passwordInput.getText() != null ? passwordInput.getText().toString() : "";
         String confirmPassword = confirmPasswordInput.getText() != null ? confirmPasswordInput.getText().toString() : "";
-        String selectedGym = gymSpinner.getSelectedItem() != null ? gymSpinner.getSelectedItem().toString() : "";
+        
+        String selectedGym = "";
+        if (gymSpinner.getSelectedItem() != null) {
+            // We use the name from the spinner, but we might need the ID or the name itself depending on backend
+            // Assuming backend expects name as per previous hardcoded implementation.
+            selectedGym = gymSpinner.getSelectedItem().toString();
+        }
+        
         String selectedRole = roleSpinner.getSelectedItem() != null ? roleSpinner.getSelectedItem().toString() : "";
 
         boolean hasError = false;

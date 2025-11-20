@@ -1,0 +1,100 @@
+package com.example.gym_app.data.gyms;
+
+import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
+
+import com.example.gym_app.data.users.UserApiService;
+import com.example.gym_app.data.users.UserResponse;
+
+import org.json.JSONObject;
+
+import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class GymRemoteDataSource {
+
+    private final GymApiService apiService;
+
+    public GymRemoteDataSource() {
+        this(GymServiceFactory.createService());
+    }
+
+    GymRemoteDataSource(GymApiService apiService) {
+        this.apiService = apiService;
+    }
+
+    public Call<List<GymResponse>> getAllGyms(@Nullable String authToken,
+                                                final GetAllGymsCallback callback) {
+        String authHeader = buildAuthHeader(authToken);
+        Call<List<GymResponse>> call = apiService.getAllGyms(authHeader);
+
+        call.enqueue(new Callback<List<GymResponse>>() {
+            @Override
+            public void onResponse(Call<List<GymResponse>> call, Response<List<GymResponse>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                    return;
+                }
+                callback.onError(extractErrorMessage(response), null);
+            }
+
+            @Override
+            public void onFailure(Call<List<GymResponse>> call, Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+                callback.onError(null, t);
+            }
+        });
+        return call;
+    }
+
+    @Nullable
+    private String buildAuthHeader(@Nullable String authToken) {
+        if (TextUtils.isEmpty(authToken)) {
+            return null;
+        }
+        return "Bearer " + authToken;
+    }
+
+    private String extractErrorMessage(Response<?> response) {
+        if (response == null || response.errorBody() == null) {
+            return null;
+        }
+        ResponseBody errorBody = response.errorBody();
+        try {
+            String body = errorBody.string();
+            if (body == null || body.isEmpty()) {
+                return null;
+            }
+            JSONObject jsonObject = new JSONObject(body);
+            if (jsonObject.has("message")) {
+                return jsonObject.optString("message");
+            }
+            if (jsonObject.has("error")) {
+                return jsonObject.optString("error");
+            }
+            if (jsonObject.has("detail")) {
+                return jsonObject.optString("detail");
+            }
+            return null;
+        } catch (Exception exception) {
+            return null;
+        } finally {
+            try {
+                errorBody.close();
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    public interface GetAllGymsCallback {
+        void onSuccess(List<GymResponse> users);
+        void onError(@Nullable String errorMessage, @Nullable Throwable throwable);
+    }
+}
