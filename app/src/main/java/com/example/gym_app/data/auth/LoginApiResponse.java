@@ -17,7 +17,8 @@ class LoginApiResponse {
 
     @SerializedName("refreshToken")
     private String refreshToken;
-
+    @SerializedName("id")
+    private String id;
     @SerializedName("email")
     private String email;
 
@@ -57,6 +58,17 @@ class LoginApiResponse {
         }
         if (!TextUtils.isEmpty(refreshToken)) {
             return refreshToken;
+        }
+        return null;
+    }
+
+    String getResolvedId() {
+        if (!TextUtils.isEmpty(id)) {
+            return id;
+        }
+        ApiUser resolvedUser = firstNonNull(user, data);
+        if (resolvedUser != null) {
+            return resolvedUser.getId();
         }
         return null;
     }
@@ -137,6 +149,8 @@ class LoginApiResponse {
 
         @SerializedName("name")
         private String name;
+        @SerializedName("id")
+        private String id;
 
         @SerializedName("fullName")
         private String fullName;
@@ -155,6 +169,13 @@ class LoginApiResponse {
 
         @SerializedName("gymName")
         private String gymName;
+
+        String getId() {
+            if (!TextUtils.isEmpty(id)) {
+                return id;
+            }
+            return null;
+        }
 
         String getEmail() {
             if (!TextUtils.isEmpty(email)) {

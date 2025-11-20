@@ -42,6 +42,7 @@ public class AuthRepository {
                 ongoingLoginCall = null;
                 LoginResult result = buildLoginResult(credentials, response, null);
                 preferencesDataSource.saveSession(context,
+                        result.getId(),
                         result.getEmail(),
                         result.getDisplayName(),
                         result.getAuthToken(),
@@ -89,6 +90,7 @@ public class AuthRepository {
                 preferencesDataSource.saveSession(context,
                         result.getEmail(),
                         result.getDisplayName(),
+                        result.getId(),
                         result.getAuthToken(),
                         result.getRole(),
                         result.getGymName(),
@@ -125,6 +127,7 @@ public class AuthRepository {
                                          @Nullable LoginApiResponse response,
                                          @Nullable String fallbackRole) {
         String email = credentials.getEmail();
+        String id = null;
         String displayName = null;
         String token = null;
         String message = null;
@@ -136,6 +139,7 @@ public class AuthRepository {
             if (!TextUtils.isEmpty(resolvedEmail)) {
                 email = resolvedEmail;
             }
+            id = response.getResolvedId();
             displayName = response.getResolvedDisplayName();
             token = response.getResolvedToken();
             message = response.getMessage();

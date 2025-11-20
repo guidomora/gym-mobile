@@ -17,7 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.gym_app.databinding.ActivityPerfilBinding;
+import com.example.gym_app.viewmodel.ProfileUiState;
 import com.example.gym_app.viewmodel.ProfileViewModel;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class PerfilActivity extends AppCompatActivity {
 
@@ -40,6 +43,20 @@ public class PerfilActivity extends AppCompatActivity {
             }
     );
 
+    private final ActivityResultLauncher<Intent> qrScannerLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                IntentResult scanResult = IntentIntegrator.parseActivityResult(result.getResultCode(), result.getData());
+                if (scanResult != null) {
+                    if (scanResult.getContents() == null) {
+                        Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_LONG).show();
+                    } else {
+                        String qrContent = scanResult.getContents();
+                        viewModel.linkMembership(qrContent);
+                    }
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +65,8 @@ public class PerfilActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+
+        observeUiState();
 
         LinearLayout homeButton = findViewById(R.id.nav_home);
         LinearLayout todayButton = findViewById(R.id.nav_today);
@@ -88,10 +107,25 @@ public class PerfilActivity extends AppCompatActivity {
                 startActivity(new Intent(PerfilActivity.this, EditarPerfilActivity.class));
             });
         }
+
+        binding.btnLinkMembership.setOnClickListener(v -> startQrScanner());
     }
 
     private void observeUiState() {
+        viewModel.getUiState().observe(this, profileUiState -> {
+            if (profileUiState instanceof ProfileUiState.Loading) {
+                //Success handling
+            } else {
+                //other
+            }
+        });
+    }
+    private void startQrScanner() {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setPrompt("Escanea el codigo QR de tu membresia");
+        integrator.setOrientationLocked(true);
 
+        qrScannerLauncher.launch(integrator.createScanIntent());
     }
 
     private void openCamera() {

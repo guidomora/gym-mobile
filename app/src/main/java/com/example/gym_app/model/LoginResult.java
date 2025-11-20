@@ -6,6 +6,7 @@ public class LoginResult {
 
     private final String email;
     private final String displayName;
+    private final String id;
     private final String authToken;
     private final String message;
     private final String role;
@@ -13,10 +14,12 @@ public class LoginResult {
 
     public LoginResult(String email,
                        String displayName,
+                       String id,
                        @Nullable String authToken,
                        @Nullable String message,
                        @Nullable String role,
                        @Nullable String gymName) {
+        this.id = id;
         this.email = email;
         this.displayName = displayName;
         this.authToken = authToken;
@@ -28,10 +31,11 @@ public class LoginResult {
     // Constructor for backward compatibility if needed, or just update callers
     public LoginResult(String email,
                        String displayName,
+                       String id,
                        @Nullable String authToken,
                        @Nullable String message,
                        @Nullable String role) {
-        this(email, displayName, authToken, message, role, null);
+        this(email, displayName, id, authToken, message, role, null);
     }
 
     public String getEmail() {
@@ -40,6 +44,10 @@ public class LoginResult {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getId() {
+        return id;
     }
 
     @Nullable

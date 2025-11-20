@@ -51,4 +51,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.5.1")
     implementation("androidx.lifecycle:lifecycle-livedata:2.5.1")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }

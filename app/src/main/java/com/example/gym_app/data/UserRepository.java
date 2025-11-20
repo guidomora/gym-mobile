@@ -68,6 +68,15 @@ public class UserRepository {
                 });
     }
 
+    public void getUserById(Context context, final UpdateCallback callback) {
+        if (context == null || callback == null) {
+            return;
+        }
+        cancelOngoingCall();
+        String authToken = sessionManager.getAuthToken(context);
+        //Obtener ID de Saved login data
+    }
+
     // --- MÉTODOS DE NICO (Actualizar Perfil) ---
 
     public void updateProfile(Context context, String userId, UpdateProfileRequest request, final UpdateCallback callback) {

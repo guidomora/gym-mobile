@@ -47,6 +47,31 @@ public class UserRemoteDataSource {
         return call;
     }
 
+    public Call<UserResponse> getUserById(@Nullable String authToken, Long userId,
+                                          final GetUserByIdCallback callback) {
+        String authHeader = buildAuthHeader(authToken);
+        Call<UserResponse> call = apiService.getUserById(authHeader, userId);
+
+        call.enqueue(new Callback<UserResponse>() {
+            @Override
+            public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    callback.onSuccess(response.body());
+                    return;
+                }
+                callback.onError(extractErrorMessage(response), null);
+            }
+
+            public void onFailure(Call<UserResponse> call, Throwable t) {
+                if (call.isCanceled()) {
+                    return;
+                }
+                callback.onError(null, t);
+            }
+        });
+        return call;
+    }
+
     @Nullable
     private String buildAuthHeader(@Nullable String authToken) {
         if (TextUtils.isEmpty(authToken)) {
@@ -84,6 +109,11 @@ public class UserRemoteDataSource {
             } catch (Exception ignored) {
             }
         }
+    }
+
+    public interface GetUserByIdCallback {
+            void onSuccess (UserResponse user);
+            void onError(@Nullable String errorMessage, @Nullable Throwable throwable);
     }
 
     public interface GetAllUsersCallback {
