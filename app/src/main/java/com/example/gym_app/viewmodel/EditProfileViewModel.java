@@ -50,4 +50,21 @@ public class EditProfileViewModel extends AndroidViewModel {
             }
         });
     }
+
+    public void linkMembership(String membershipKey) {
+        isSaving.setValue(true);
+        userRepository.linkMembership(getApplication(), membershipKey, new UserRepository.UpdateCallback() {
+            @Override
+            public void onSuccess() {
+                isSaving.postValue(false);
+                saveSuccess.postValue("Membresia vinculada correctamente");
+            }
+
+            @Override
+            public void onError(String error) {
+                isSaving.postValue(false);
+                saveError.postValue(error);
+            }
+        });
+    }
 }

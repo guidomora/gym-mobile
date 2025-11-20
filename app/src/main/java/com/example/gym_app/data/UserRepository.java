@@ -13,6 +13,8 @@ import com.example.gym_app.data.user.UserApiService;
 import com.example.gym_app.data.user.UserServiceFactory;
 import com.example.gym_app.data.users.UserRemoteDataSource;
 import com.example.gym_app.data.users.UserResponse;
+import com.example.gym_app.model.PerfilUser;
+import com.example.gym_app.viewmodel.ProfileUiState;
 
 import java.io.IOException;
 import java.util.List;
@@ -91,6 +93,33 @@ public class UserRepository {
                 callback.onError("Error de conexión: " + t.getMessage());
             }
         });
+    }
+    public ProfileUiState linkMembership(Context context, String membershipKey, final UpdateCallback callback) {
+        try {
+            String token = sessionManager.getAuthToken(context);
+            if (token == null) {
+                return new ProfileUiState.Error("No hay sesion activa");
+            }
+            String authHeader = "Bearer " + token;
+
+            Response<UserResponse> response = apiService.linkMembership(authHeader, membershipKey).execute();
+            if (response.isSuccessful() && response.body() != null) {
+                return new ProfileUiState.Success(new PerfilUser(
+                        response.body().getName(),
+                        response.body().getPhoneNumber(),
+                        response.body().getEmail(),
+                        response.body().getBirthDate(),
+                        response.body().getMembership()
+                ));
+            } else {
+                String error = "Error en la respuesta de la API: " + response.code();
+                return new ProfileUiState.Error(error);
+            }
+        } catch (IOException e) {
+            return new ProfileUiState.Error("Error de red: " + e.getMessage());
+        } catch (Exception e) {
+            return new ProfileUiState.Error("Error desconocido: " + e.getMessage());
+        }
     }
 
     // --- HELPERS ---

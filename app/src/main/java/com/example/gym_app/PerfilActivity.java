@@ -16,11 +16,14 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.gym_app.databinding.ActivityPerfilBinding;
 import com.example.gym_app.viewmodel.ProfileViewModel;
 
 public class PerfilActivity extends AppCompatActivity {
 
     private ImageView profileImageView;
+    private ProfileViewModel viewModel;
+    private ActivityPerfilBinding binding;
 
     private final ActivityResultLauncher<Intent> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -40,15 +43,18 @@ public class PerfilActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_perfil);
 
-        ProfileViewModel viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        binding = ActivityPerfilBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        viewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
         LinearLayout homeButton = findViewById(R.id.nav_home);
         LinearLayout todayButton = findViewById(R.id.nav_today);
         profileImageView = findViewById(R.id.iv_profile_pic);
         Button btnLogout = findViewById(R.id.btn_save);
         Button btnEditProfile = findViewById(R.id.btn_edit_profile);
+        Button btnLinkMembership = findViewById(R.id.btn_link_membership);
 
         viewModel.getLogoutSuccess().observe(this, success -> {
             if (Boolean.TRUE.equals(success)) {
@@ -82,6 +88,10 @@ public class PerfilActivity extends AppCompatActivity {
                 startActivity(new Intent(PerfilActivity.this, EditarPerfilActivity.class));
             });
         }
+    }
+
+    private void observeUiState() {
+
     }
 
     private void openCamera() {
