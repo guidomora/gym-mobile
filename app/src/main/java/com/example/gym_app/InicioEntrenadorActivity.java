@@ -33,6 +33,8 @@ public class InicioEntrenadorActivity extends AppCompatActivity {
     private UserRepository userRepository;
     private AuthRepository authRepository;
 
+    private RecyclerView studentsRecyclerView;
+    private TextView emptyStateTextView;
     private ProgressBar loadingIndicator;
 
     private String currentTrainerGym = "SportClub";
@@ -57,7 +59,8 @@ public class InicioEntrenadorActivity extends AppCompatActivity {
         }
 
         TextView trainerNameTextView = findViewById(R.id.trainerName);
-        RecyclerView studentsRecyclerView = findViewById(R.id.recycler_students);
+        studentsRecyclerView = findViewById(R.id.recycler_students);
+        emptyStateTextView = findViewById(R.id.tv_empty_state);
         LinearLayout profileButton = findViewById(R.id.nav_profile);
 
         loadingIndicator = findViewById(R.id.progress_bar);
@@ -82,6 +85,8 @@ public class InicioEntrenadorActivity extends AppCompatActivity {
 
     private void loadStudentsFromApi() {
         if (loadingIndicator != null) loadingIndicator.setVisibility(View.VISIBLE);
+        if (studentsRecyclerView != null) studentsRecyclerView.setVisibility(View.GONE);
+        if (emptyStateTextView != null) emptyStateTextView.setVisibility(View.GONE);
 
         userRepository.getAllUsers(this, new UserRepository.GetAllUsersCallback() {
             @Override
@@ -96,8 +101,22 @@ public class InicioEntrenadorActivity extends AppCompatActivity {
                 Toast.makeText(InicioEntrenadorActivity.this,
                         "Error al cargar alumnos: " + errorMessage,
                         Toast.LENGTH_SHORT).show();
+                // En caso de error, si la lista esta vacía, podríamos mostrar el empty state o un mensaje de reintentar
+                if (studentList.isEmpty()) {
+                    updateEmptyState(true);
+                }
             }
         });
+    }
+
+    private void updateEmptyState(boolean isEmpty) {
+        if (emptyStateTextView == null) {
+            return;
+        }
+        emptyStateTextView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        if (studentsRecyclerView != null) {
+            studentsRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+        }
     }
 
     private void filterAndDisplayStudents(List<UserResponse> allUsers) {
@@ -126,42 +145,17 @@ public class InicioEntrenadorActivity extends AppCompatActivity {
                 }
             }
         }
-
+        
         if (adapter != null) {
             adapter.setStudents(studentList);
         }
+        updateEmptyState(studentList.isEmpty());
     }
 
     public void fetchRoutinesAndNavigate(TrainerStudent student) {
-        if (loadingIndicator != null) loadingIndicator.setVisibility(View.VISIBLE);
-
-        Long studentId = Long.parseLong(student.getId());
-
-        routineRepository.getRoutinesByUserId(this, studentId, new RoutineRepository.GetAllRoutinesCallback() {
-            @Override
-            public void onSuccess(List<Routine> routines) {
-                if (loadingIndicator != null) loadingIndicator.setVisibility(View.GONE);
-
-                ArrayList<String> routineIds = new ArrayList<>();
-                if (routines != null) {
-                    for (Routine routine : routines) {
-                        routineIds.add(routine.getId());
-                    }
-                }
-
-                Intent intent = new Intent(InicioEntrenadorActivity.this, RutinasEntrenadorActivity.class);
-                intent.putExtra(RutinasEntrenadorActivity.EXTRA_STUDENT_ID, student.getId());
-                intent.putExtra(RutinasEntrenadorActivity.EXTRA_STUDENT_NAME, student.getFullName());
-                intent.putStringArrayListExtra(RutinasEntrenadorActivity.EXTRA_STUDENT_ROUTINE_IDS, routineIds);
-
-                startActivity(intent);
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-                if (loadingIndicator != null) loadingIndicator.setVisibility(View.GONE);
-                Toast.makeText(InicioEntrenadorActivity.this, "Error cargando rutinas: " + errorMessage, Toast.LENGTH_LONG).show();
-            }
-        });
+        Intent intent = new Intent(InicioEntrenadorActivity.this, RutinasEntrenadorActivity.class);
+        intent.putExtra(RutinasEntrenadorActivity.EXTRA_STUDENT_ID, student.getId());
+        intent.putExtra(RutinasEntrenadorActivity.EXTRA_STUDENT_NAME, student.getFullName());
+        startActivity(intent);
     }
 }
