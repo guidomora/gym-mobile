@@ -68,6 +68,10 @@ public class AuthRepository {
         }
     }
 
+    public void logout(final Context context) {
+        preferencesDataSource.clearSession(context);
+    }
+
     public void register(final Context context,
                          final RegisterFormData formData,
                          final RegisterCallback callback) {
