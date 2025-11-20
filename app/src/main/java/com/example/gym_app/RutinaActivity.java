@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gym_app.adapter.ExerciseAdapter;
-import com.example.gym_app.data.exercises.ExerciseRepository;
 import com.example.gym_app.data.RoutineRepository;
 import com.example.gym_app.model.Exercise;
 import com.example.gym_app.model.Routine;
@@ -33,7 +32,6 @@ public class RutinaActivity extends AppCompatActivity {
     public static final String EXTRA_ROUTINE_DAY = "extra_routine_day";
 
     private RoutineRepository routineRepository;
-    private ExerciseRepository exerciseRepository;
     private ExerciseAdapter exerciseAdapter;
     private TextView routineTitle;
     private TextView routineMeta;
@@ -61,13 +59,11 @@ public class RutinaActivity extends AppCompatActivity {
         exercisesRecyclerView.setAdapter(exerciseAdapter);
 
         routineRepository = new RoutineRepository();
-        exerciseRepository = new ExerciseRepository();
 
         String routineId = getIntent().getStringExtra(EXTRA_ROUTINE_ID);
         if (!TextUtils.isEmpty(routineId)) {
             try {
                 Long routineIdLong = Long.parseLong(routineId);
-                loadExercisesFromApi(routineIdLong);
                 loadRoutineFromApi(routineIdLong);
             } catch (NumberFormatException e) {
                 loadRoutineLocal();
@@ -109,24 +105,6 @@ public class RutinaActivity extends AppCompatActivity {
         });
     }
 
-    private void loadExercisesFromApi(Long routineId) {
-        showLoading(true);
-        exerciseRepository.getExercisesByRoutine(this, routineId, new ExerciseRepository.GetExercisesCallback() {
-            @Override
-            public void onSuccess(List<Exercise> exercises) {
-                showLoading(false);
-                bindExercises(exercises);
-            }
-
-            @Override
-            public void onError(@NonNull String errorMessage) {
-                showLoading(false);
-                Toast.makeText(RutinaActivity.this,
-                        errorMessage,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
     private void loadRoutineLocal() {
         Routine routine = loadRoutineData();
         if (routine != null) {
@@ -208,9 +186,6 @@ public class RutinaActivity extends AppCompatActivity {
     protected void onDestroy() {
         if (routineRepository != null) {
             routineRepository.cancelRoutineCreation();
-        }
-        if (exerciseRepository != null) {
-            exerciseRepository.cancelOngoingCall();
         }
         super.onDestroy();
     }

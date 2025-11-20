@@ -44,12 +44,6 @@
         <item>Jueves</item>
         <item>Viernes</item>
     </string-array>
-    <string-array name="weight_type_options">
-        <item>BARRAS</item>
-        <item>MANCUERNAS</item>
-        <item>RUSAS</item>
-        <item>NINGUNA</item>
-    </string-array>
     <string name="routine_meta_format">%1$d min · %2$s</string>
     <string name="routine_meta_only_duration">%1$d min</string>
     <string name="routine_empty_exercises">No hay ejercicios cargados aún.</string>
@@ -89,10 +83,4 @@
     <string name="no_routines_available">No hay rutinas disponibles</string>
     <string name="trainer_routine_update_success">Rutina "%s" actualizada exitosamente</string>
     <string name="routine_not_found">Rutina no encontrada</string>
-    <string name="trainer_exercise_error_invalid_name">Ingresa un nombre para el ejercicio %1$d.</string>
-    <string name="trainer_exercise_error_invalid_sets">Las series del ejercicio %1$d deben ser al menos 1.</string>
-    <string name="trainer_exercise_error_invalid_repetitions">Las repeticiones del ejercicio %1$d deben ser al menos 1.</string>
-    <string name="trainer_exercise_error_invalid_rest">El descanso del ejercicio %1$d no puede ser negativo.</string>
-    <string name="trainer_exercise_error_invalid_weight_type">Selecciona el tipo de peso para el ejercicio %1$d.</string>
-    <string name="trainer_exercise_save_success">Ejercicios guardados correctamente.</string>
 </resources>

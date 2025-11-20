@@ -130,20 +130,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-medium"
-        android:text="Tipo de peso"
+        android:text="Peso sugerido"
         android:textColor="@color/login_primary_text"
         android:textSize="15sp" />
 
-    <Spinner
-        android:id="@+id/spinner_weight_type"
+    <EditText
+        android:id="@+id/et_weight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@drawable/input_field"
-        android:entries="@array/weight_type_options"
+        android:hint="moderado-alto"
+        android:inputType="text"
         android:paddingStart="16dp"
         android:paddingTop="12dp"
         android:paddingEnd="16dp"
-        android:spinnerMode="dropdown" />
+        android:paddingBottom="12dp"
+        android:textColor="@color/login_primary_text"
+        android:textColorHint="@color/login_hint_text"
+        android:textSize="15sp" />
 
 </LinearLayout>

@@ -112,7 +112,7 @@ public class RoutineRepository {
                     @Override
                     public void onSuccess(RoutineResponse response) {
                         ongoingCall = null;
-                        callback.onSuccess(mapRoutineResponse(response));
+                        callback.onSuccess();
                     }
 
                     @Override
@@ -335,7 +335,7 @@ public class RoutineRepository {
 
     // CALLBACKS
     public interface CreateRoutineCallback {
-        void onSuccess(@Nullable Routine routine);
+        void onSuccess();
         void onError(@NonNull String errorMessage);
     }
 

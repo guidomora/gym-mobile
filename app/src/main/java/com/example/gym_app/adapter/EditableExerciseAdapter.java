@@ -5,11 +5,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -101,16 +98,14 @@ public class EditableExerciseAdapter extends RecyclerView.Adapter<EditableExerci
         private final EditText seriesEditText;
         private final EditText repetitionsEditText;
         private final EditText restEditText;
-        private final Spinner weightTypeSpinner;
+        private final EditText weightEditText;
         private final ImageButton deleteButton;
 
         private final ExerciseFieldWatcher nameWatcher;
         private final ExerciseFieldWatcher seriesWatcher;
         private final ExerciseFieldWatcher repetitionsWatcher;
         private final ExerciseFieldWatcher restWatcher;
-        private final ArrayAdapter<CharSequence> weightTypeAdapter;
-        private EditableExercise currentExercise;
-        private boolean ignoreWeightTypeChanges;
+        private final ExerciseFieldWatcher weightWatcher;
 
         EditableExerciseViewHolder(@NonNull View itemView, RemoveExerciseCallback removeExerciseCallback) {
             super(itemView);
@@ -118,7 +113,7 @@ public class EditableExerciseAdapter extends RecyclerView.Adapter<EditableExerci
             seriesEditText = itemView.findViewById(R.id.et_series);
             repetitionsEditText = itemView.findViewById(R.id.et_repetitions);
             restEditText = itemView.findViewById(R.id.et_rest);
-            weightTypeSpinner = itemView.findViewById(R.id.spinner_weight_type);
+            weightEditText = itemView.findViewById(R.id.et_weight);
             deleteButton = itemView.findViewById(R.id.btn_delete_exercise);
 
             nameWatcher = new ExerciseFieldWatcher((exercise, value) ->
@@ -129,32 +124,14 @@ public class EditableExerciseAdapter extends RecyclerView.Adapter<EditableExerci
                     exercise.setRepetitions(value));
             restWatcher = new ExerciseFieldWatcher((exercise, value) ->
                     exercise.setRest(value));
+            weightWatcher = new ExerciseFieldWatcher((exercise, value) ->
+                    exercise.setSuggestedWeight(value));
 
             nameEditText.addTextChangedListener(nameWatcher);
             seriesEditText.addTextChangedListener(seriesWatcher);
             repetitionsEditText.addTextChangedListener(repetitionsWatcher);
             restEditText.addTextChangedListener(restWatcher);
-            weightTypeAdapter = ArrayAdapter.createFromResource(itemView.getContext(),
-                    R.array.weight_type_options, android.R.layout.simple_spinner_item);
-            weightTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            weightTypeSpinner.setAdapter(weightTypeAdapter);
-            weightTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (ignoreWeightTypeChanges || currentExercise == null) {
-                        return;
-                    }
-                    Object selected = parent.getItemAtPosition(position);
-                    if (selected != null) {
-                        currentExercise.setWeightType(selected.toString());
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    // No-op
-                }
-            });
+            weightEditText.addTextChangedListener(weightWatcher);
 
             deleteButton.setOnClickListener(v -> {
                 if (removeExerciseCallback == null) {
@@ -172,37 +149,25 @@ public class EditableExerciseAdapter extends RecyclerView.Adapter<EditableExerci
             seriesWatcher.bindExercise(exercise);
             repetitionsWatcher.bindExercise(exercise);
             restWatcher.bindExercise(exercise);
-            currentExercise = exercise;
+            weightWatcher.bindExercise(exercise);
 
             nameWatcher.setIgnoreChanges(true);
             seriesWatcher.setIgnoreChanges(true);
             repetitionsWatcher.setIgnoreChanges(true);
             restWatcher.setIgnoreChanges(true);
-            ignoreWeightTypeChanges = true;
+            weightWatcher.setIgnoreChanges(true);
 
             nameEditText.setText(exercise.getName());
             seriesEditText.setText(exercise.getSeries());
             repetitionsEditText.setText(exercise.getRepetitions());
             restEditText.setText(exercise.getRest());
-            String resolvedWeightType = resolveWeightSelection(exercise.getWeightType());
-            int spinnerPosition = weightTypeAdapter.getPosition(resolvedWeightType);
-            if (spinnerPosition >= 0) {
-                weightTypeSpinner.setSelection(spinnerPosition);
-            }
-            exercise.setWeightType(resolvedWeightType);
+            weightEditText.setText(exercise.getSuggestedWeight());
 
             nameWatcher.setIgnoreChanges(false);
             seriesWatcher.setIgnoreChanges(false);
             repetitionsWatcher.setIgnoreChanges(false);
             restWatcher.setIgnoreChanges(false);
-            ignoreWeightTypeChanges = false;
-        }
-
-        private String resolveWeightSelection(String weightType) {
-            if (weightType == null || weightType.isEmpty()) {
-                return "NINGUNA";
-            }
-            return weightType.toUpperCase();
+            weightWatcher.setIgnoreChanges(false);
         }
     }
 
