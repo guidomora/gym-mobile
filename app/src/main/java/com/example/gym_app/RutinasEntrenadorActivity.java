@@ -120,6 +120,7 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        loadRoutinesFromApi();
     }
 
     @Override
@@ -135,10 +136,29 @@ public class RutinasEntrenadorActivity extends AppCompatActivity {
     private void loadRoutinesFromApi() {
         showLoading(true);
 
-        routineRepository.getAllRoutines(this, new RoutineRepository.GetAllRoutinesCallback() {
+        if (studentId == null) {
+            showLoading(false);
+            updateEmptyState(true);
+            return;
+        }
+
+        Long userId = null;
+        try {
+            userId = Long.parseLong(studentId);
+        } catch (NumberFormatException e) {
+            showLoading(false);
+            updateEmptyState(true);
+            return;
+        }
+
+        routineRepository.getRoutinesByUserId(this, userId, new RoutineRepository.GetAllRoutinesCallback() {
             @Override
             public void onSuccess(List<Routine> routines) {
                 showLoading(false);
+
+                if (routines == null) {
+                    routines = new ArrayList<>();
+                }
 
                 currentRoutines = new ArrayList<>(routines);
                 routineAdapter.submitList(new ArrayList<>(currentRoutines));

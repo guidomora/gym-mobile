@@ -293,6 +293,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
                 Toast.makeText(RutinaEntrenadorActivity.this,
                         getString(R.string.trainer_routine_create_success, displayName),
                         Toast.LENGTH_LONG).show();
+                setResult(RESULT_OK);
                 finish();
             }
 
@@ -348,6 +349,7 @@ public class RutinaEntrenadorActivity extends AppCompatActivity {
                         Toast.makeText(RutinaEntrenadorActivity.this,
                                 getString(R.string.trainer_routine_update_success, routineName),
                                 Toast.LENGTH_LONG).show();
+                        setResult(RESULT_OK);
                         finish();
 
                     }
