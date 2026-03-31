@@ -14,5 +14,5 @@ import retrofit2.http.Header;
 public interface GymApiService {
 
         @GET("/api/gyms")
-        Call<List<GymResponse>> getAllGyms(@Nullable @Header("Authorization") String authHeader);
+        Call<List<GymResponse>> getAllGyms();
     }

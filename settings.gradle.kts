@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Gym_app"
+rootProject.name = "Gym-Pass"
 include(":app")
  

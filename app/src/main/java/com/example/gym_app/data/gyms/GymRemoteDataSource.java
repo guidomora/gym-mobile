@@ -31,7 +31,7 @@ public class GymRemoteDataSource {
     public Call<List<GymResponse>> getAllGyms(@Nullable String authToken,
                                                 final GetAllGymsCallback callback) {
         String authHeader = buildAuthHeader(authToken);
-        Call<List<GymResponse>> call = apiService.getAllGyms(authHeader);
+        Call<List<GymResponse>> call = apiService.getAllGyms();
 
         call.enqueue(new Callback<List<GymResponse>>() {
             @Override
